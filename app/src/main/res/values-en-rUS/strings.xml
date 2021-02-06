@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="register">REGISTER</string>
+    <string name="confirmPassword">Confirm password</string>
+    <string name="name_user">User</string>
+    <string name="Register">SIGN IN</string>
+    <string name="Confirm">CONFIRM</string>
+    <string name="register_here">Sign up here</string>
+    <string name="dontHaveAccount">¿Don´t have account?</string>
+    <string name="login">LOGIN</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="Email">Email</string>
+    <string name="app_name">AppChat</string>
+</resources>

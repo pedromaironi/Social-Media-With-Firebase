@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">AppChat</string>
+    <string name="Email">Correo electronico</string>
+    <string name="email">Correo electronico</string>
+    <string name="password">Contraseña</string>
+    <string name="login">INICIAR SESIÓN</string>
+    <string name="dontHaveAccount">¿No tienes cuenta?</string>
+    <string name="register_here">Registrate aquí</string>
+    <string name="register">REGISTRO</string>
+    <string name="confirmPassword">Confirmar contraseña</string>
+    <string name="name_user">Nombre de usuario</string>
+    <string name="Register">REGISTRARSE</string>
+    <string name="Confirm">CONFIRMAR</string>
+
+    <string name="complete_information">Completa tu información</string>
+
+</resources>
