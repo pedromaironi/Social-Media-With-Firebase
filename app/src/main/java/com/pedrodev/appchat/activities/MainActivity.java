@@ -3,6 +3,8 @@ package com.pedrodev.appchat.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,38 +23,49 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.pedrodev.appchat.R;
+import com.pedrodev.appchat.models.User;
+import com.pedrodev.appchat.providers.AuthProvider;
+import com.pedrodev.appchat.providers.UsersProvider;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import dmax.dialog.SpotsDialog;
+
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE_GOOGLE = 1;
-    private TextView btnRegisterHere;
-    private EditText mTextInputEmail;
-    private EditText mTextInputPassword;
-    private Button mButtonLogin;
-    private FirebaseAuth mAuth;
-    private SignInButton mButtonLoginGoogle;
-    private GoogleSignInClient mGoogleSignInClient;
-    FirebaseFirestore mFirestore;
+    TextView mTextViewRegister;
+    TextInputEditText mTextInputEmail;
+    TextInputEditText mTextInputPassword;
+    Button mButtonLogin;
+    AuthProvider mAuthProvider;
+    SignInButton mButtonGoogle;
+    GoogleSignInClient mGoogleSignInClient;
+    UsersProvider mUsersProvider;
+    private final int REQUEST_CODE_GOOGLE = 1;
+    AlertDialog mDialog;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnRegisterHere = (TextView) findViewById(R.id.btnRegisterHere);
-        mTextInputEmail = (EditText) findViewById(R.id.textInputEmail);
-        mTextInputPassword = (EditText) findViewById(R.id.textInputPassword);
-        mButtonLogin = (Button) findViewById(R.id.btnLogin);
-        mButtonLoginGoogle = (SignInButton)  findViewById(R.id.signInButtonGoogle);
+        mTextViewRegister = findViewById(R.id.btnRegisterHere);
+        mTextInputEmail = findViewById(R.id.textInputEmail);
+        mTextInputPassword = findViewById(R.id.textInputPassword);
+        mButtonLogin = findViewById(R.id.btnLogin);
+        mButtonGoogle = findViewById(R.id.signInButtonGoogle);
+
+        mAuthProvider = new AuthProvider();
+        mDialog = new SpotsDialog.Builder()
+                .setContext(this)
+                .setMessage("Espere un momento")
+                .setCancelable(false).build();
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -60,59 +73,47 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        mAuth = FirebaseAuth.getInstance();
-        mFirestore = FirebaseFirestore.getInstance();
+        mUsersProvider = new UsersProvider();
+
+        mButtonGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signInGoogle();
+            }
+        });
 
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 login();
             }
         });
 
-        mButtonLoginGoogle.setOnClickListener(new View.OnClickListener(){
+        mTextViewRegister.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                signInWithGoogle();
-            }
-        });
-
-        btnRegisterHere.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
                 startActivity(intent);
             }
         });
-
-
     }
 
-
-    private void signInWithGoogle() {
+    private void signInGoogle() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE);
     }
 
-/*
-
-RequestCode: el código de solicitud entero proporcionado originalmente a startActivityForResult (), lo que le permite identificar de quién proviene este resultado.
-ResultCode: el código de resultado entero devuelto por la actividad secundaria a través de su setResult ().
-Datos: un Intent, que puede devolver datos de resultados a la persona que llama (se pueden adjuntar varios datos a los 'extras' de Intent).
-
- */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == REQUEST_CODE_GOOGLE) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 // Google Sign In was successful, authenticate with Firebase
-                //Log.d("ERROR", "firebaseAuthWithGoogle:" + account.getId());
-
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account.getIdToken());
+                firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w("ERROR", "Google sign in failed", e);
@@ -121,66 +122,45 @@ Datos: un Intent, que puede devolver datos de resultados a la persona que llama 
         }
     }
 
-    private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            //Log.d("RESOLVE", "signInWithCredential:success");
-                            // FirebaseUser user = mAuth.getCurrentUser();
-                            //getUid return UID user
-
-                            String id = mAuth.getCurrentUser().getUid();
-                            checkUserExist(id);
-                            //updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(MainActivity.this, "Introduzca correctamente su Email y Constraseña",Toast.LENGTH_LONG).show();
-                            // Log.w("ERROR", "signInWithCredential:failure", task.getException());
-                            // nackbar.make(mBinding.mainLayout, "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
-                            // updateUI(null);
-                        }
-                    }
-                });
-    }
-
-    private void login(){
-        String email = mTextInputEmail.getText().toString();
-        String password = mTextInputPassword.getText().toString();
-
-        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        mDialog.show();
+        mAuthProvider.googleLogin(acct).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                    startActivity(intent);
-
-
-                }else{
-                    Toast.makeText(MainActivity.this, "Introduzca correctamente su Email y Constraseña",Toast.LENGTH_LONG).show();
+                    String id = mAuthProvider.getUid();
+                    checkUserExist(id);
                 }
+                else {
+                    mDialog.dismiss();
+                    // If sign in fails, display a message to the user.
+                    Log.w("ERROR", "signInWithCredential:failure", task.getException());
+                    Toast.makeText(MainActivity.this, "No se pudo iniciar sesion con google", Toast.LENGTH_SHORT).show();
+                }
+
+                // ...
             }
         });
     }
 
     private void checkUserExist(final String id) {
-        mFirestore.collection("Users").document(id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        mUsersProvider.getUser(id).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
+                    mDialog.dismiss();
                     Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                     startActivity(intent);
                 }
                 else {
-                    String email = mAuth.getCurrentUser().getEmail();
-                    Map<String, Object> map = new HashMap<>();
-                    // Map para asignar la clave email a el valor "Email"
-                    map.put("email", email);
-                    mFirestore.collection("Users").document(id).set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    String email = mAuthProvider.getEmail();
+                    User user = new User();
+                    user.setEmail(email);
+                    user.setId(id);
+                    mUsersProvider.create(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
+                            mDialog.dismiss();
                             if (task.isSuccessful()) {
                                 Intent intent = new Intent(MainActivity.this, CompleteProfileActivity.class);
                                 startActivity(intent);
@@ -195,17 +175,51 @@ Datos: un Intent, que puede devolver datos de resultados a la persona que llama 
         });
     }
 
+    private void login() {
+        String email = mTextInputEmail.getText().toString();
+        String password = mTextInputPassword.getText().toString();
+        mDialog.show();
+        mAuthProvider.login(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                mDialog.dismiss();
+                if (task.isSuccessful()) {
+                    Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(MainActivity.this, "El email o la contraseña que ingresaste no son correctas", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        Log.d("CAMPO", "email: " + email);
+        Log.d("CAMPO", "password: " + password);
+    }
+}
+
+    /*
     @Override
     protected void onStart() {
         super.onStart();
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
         updateUI(account);
     }
-
     private void updateUI(GoogleSignInAccount account){
         if(account != null){
-            String id = mAuth.getCurrentUser().getUid();
+            String id = mAuthProvider.getUid();
             checkUserExist(id);
         }
-    }
-}
+    }*/
+// FirebaseUser user = mAuth.getCurrentUser();
+//getUid return UID user
+//updateUI(user);
+
+
+// Log.w("ERROR", "signInWithCredential:failure", task.getException());
+// nackbar.make(mBinding.mainLayout, "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
+// updateUI(null);
+
+// Map<String, Object> map = new HashMap<>();
+// Map para asignar la clave email a el valor "Email"
+//map.put("email", email);
+// mFirestore.collection("Users").document(id)

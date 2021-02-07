@@ -9,8 +9,6 @@
     android:background="#FFFFFF"
     tools:context=".activities.MainActivity">
 
-
-
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -55,7 +53,7 @@
             android:layout_marginRight="30dp"
             android:layout_marginTop="40dp"
             >
-            
+
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
@@ -81,39 +79,39 @@
         </LinearLayout>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="5dp"
-        >
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_password"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="5dp"
-            />
-
-        <com.google.android.material.textfield.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/EditTextWhite"
+            android:orientation="horizontal"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="5dp"
             >
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textInputPassword"
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_password"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="5dp"
+                />
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/password"
-                android:textColorHint="@color/primary_black_color"
-                android:inputType="textPassword"/>
+                android:theme="@style/EditTextWhite"
+                >
 
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/textInputPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password"
+                    android:textColorHint="@color/primary_black_color"
+                    android:inputType="textPassword"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
 
         <Button
@@ -137,9 +135,9 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="40dp"
-             />
+            />
 
-        </LinearLayout>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
