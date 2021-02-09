@@ -12,5 +12,7 @@
     <string name="Register">REGISTRARSE</string>
     <string name="Confirm">CONFIRMAR</string>
     <string name="complete_information">Completa tu información</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

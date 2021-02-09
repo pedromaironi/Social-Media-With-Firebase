@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/itemHome"
+        android:icon="@drawable/ic_home"
+        android:title="Home" />
+    <item
+        android:id="@+id/itemFilters"
+        android:icon="@drawable/ic_filter"
+        android:title="Filter" />
+    <item
+        android:id="@+id/itemChat"
+        android:icon="@drawable/ic_chat"
+        android:title="Chats" />
+    <item
+        android:id="@+id/itemProfile"
+        android:icon="@drawable/ic_person_menu"
+        android:title="Profile" />
+
+</menu>
