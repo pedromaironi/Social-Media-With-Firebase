@@ -53,12 +53,13 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="120dp"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginRight="0dp"
                         android:layout_weight="1"
                         app:cardBackgroundColor="@color/colorPrimary"
                         app:cardCornerRadius="10dp">
 
                         <ImageView
+                            android:id="@+id/imageViewPost"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:src="@drawable/ic_camera" />
@@ -74,7 +75,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="20dp"
             android:layout_marginRight="30dp"
             android:orientation="horizontal">
 
@@ -90,47 +90,16 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/textInputVideoGame"
+                    android:id="@+id/textInputTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Nombre del juego"
+                    android:hint="Nombre de la publicación"
                     android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="30dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="27dp"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/ic_money" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/textInputPrice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Precio"
-                    android:inputType="numberSigned" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-        </LinearLayout>
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -143,7 +112,7 @@
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="27dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/ic_info" />
 
@@ -155,7 +124,7 @@
                     android:id="@+id/textInputDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Descripcion"
+                    android:hint="Descripción"
                     android:inputType="textMultiLine"
                     android:maxLines="4" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -164,9 +133,10 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/TextViewCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="25dp"
             android:text="CATEGORIAS"
             android:textAlignment="center"
             android:textSize="17dp" />
@@ -175,9 +145,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="25dp"
             android:layout_marginRight="30dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            >
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -195,6 +166,7 @@
                     app:cardElevation="10dp">
 
                     <ImageView
+                        android:id="@+id/imageViewPc"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/ic_computer" />
@@ -228,6 +200,7 @@
                     app:cardElevation="10dp">
 
                     <ImageView
+                        android:id="@+id/imageViewNotice"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/ic_baseline_games_24" />
@@ -261,6 +234,7 @@
                     app:cardElevation="10dp">
 
                     <ImageView
+                        android:id="@+id/imageViewGames"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:padding="5dp"
@@ -279,40 +253,10 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    app:cardBackgroundColor="@color/colorPrimary"
-                    app:cardCornerRadius="5dp"
-                    app:cardElevation="10dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_videogamewhite" />
-
-                </androidx.cardview.widget.CardView>
-
-                <!--                <TextView-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:text="NINTENDO"-->
-                <!--                    android:textAlignment="center"-->
-                <!--                    android:textColor="@color/colorPrimaryDark"-->
-                <!--                    android:textStyle="bold"-->
-                <!--                    android:layout_marginTop="5dp" />-->
-
-            </LinearLayout>
 
         </LinearLayout>
+
     </LinearLayout>
 
     <Button
@@ -328,5 +272,13 @@
         android:layout_marginBottom="20dp"
         android:textColor="@color/white_color" />
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/CircleImageBackFragment"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_arrow_left"
+        android:layout_margin="15dp"
+        app:civ_circle_background_color="@color/white_color"
+        />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
