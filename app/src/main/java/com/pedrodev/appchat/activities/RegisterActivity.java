@@ -21,6 +21,7 @@ import com.pedrodev.appchat.models.User;
 import com.pedrodev.appchat.providers.AuthProvider;
 import com.pedrodev.appchat.providers.UsersProvider;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -36,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText mTextInputEmail;
     private TextInputEditText mTextInputPassword;
     private TextInputEditText mTextInputPasswordConfirm;
+    private TextInputEditText mTextInputPhoneNumber;
     private Button mButtonRegister;
     AlertDialog mDialog;
     private AuthProvider mAuthProvider;
@@ -45,10 +47,12 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        mTextInputUserName = (TextInputEditText) findViewById(R.id.textInputUserName);
-        mTextInputEmail = (TextInputEditText) findViewById(R.id.textInputEmail);
-        mTextInputPassword = (TextInputEditText) findViewById(R.id.textInputRegisterPassword);
-        mTextInputPasswordConfirm = (TextInputEditText) findViewById(R.id.textInputRegisterPasswordConfirm);
+        mTextInputUserName =  findViewById(R.id.textInputUserName);
+        mTextInputEmail = findViewById(R.id.textInputEmail);
+        mTextInputPassword =  findViewById(R.id.textInputRegisterPassword);
+        mTextInputPasswordConfirm = findViewById(R.id.textInputRegisterPasswordConfirm);
+        mTextInputPhoneNumber = findViewById(R.id.textInputRegisterPhoneNumber);
+
         mCircleImageViewBack = findViewById(R.id.CircleImageBack);
         mButtonRegister = findViewById(R.id.btnRegister);
 
@@ -81,25 +85,28 @@ public class RegisterActivity extends AppCompatActivity {
         String emailUser = mTextInputEmail.getText().toString();
         String passwordUser = mTextInputPassword.getText().toString();
         String passwordUserConfirm = mTextInputPasswordConfirm.getText().toString();
-
-        if (!username.isEmpty() && !emailUser.isEmpty() && !passwordUser.isEmpty() && !passwordUserConfirm.isEmpty()) {
-            if (isEmailValid(emailUser)){
-                if(passwordUser.equals(passwordUserConfirm)){
-                    if(passwordUser.length()>5){
-                        createUser(emailUser,username,passwordUser);
+        String phoneNumber = mTextInputPhoneNumber.getText().toString();
+        if (!username.isEmpty() && !emailUser.isEmpty() && !passwordUser.isEmpty()
+                && !passwordUserConfirm.isEmpty() && !phoneNumber.isEmpty()) {
+                if (isEmailValid(emailUser)){
+                    if (isPhoneValid(phoneNumber)) {
+                    if(passwordUser.equals(passwordUserConfirm)){
+                        if(passwordUser.length()>5){
+                            createUser(emailUser,username,passwordUser,phoneNumber);
+                        }else{
+                            Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres.",Toast.LENGTH_LONG).show();
+                        }
                     }else{
-                        Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres.",Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "Las contraseñas no coinciden",Toast.LENGTH_LONG).show();
+                    }
+                    // <-- Verificar correo -->
+                    }else{
+                        Toast.makeText(this, "Telefono invalido",Toast.LENGTH_LONG).show();
                     }
                 }else{
-                    Toast.makeText(this, "Las contraseñas no coinciden",Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Email invalido",Toast.LENGTH_LONG).show();
                 }
-                // <-- Verificar correo -->
-            }else{
-                Toast.makeText(this, "Email invalido",Toast.LENGTH_LONG).show();
             }
-        }else{
-
-        }
     }
 
     public boolean isEmailValid(String email) {
@@ -109,8 +116,15 @@ public class RegisterActivity extends AppCompatActivity {
         return matcher.matches();
     }
 
+    public boolean isPhoneValid(String phoneNumber) {
+        String expression = "/^[\\(]?[\\+]?(\\d{2}|\\d{3})[\\)]?[\\s]?((\\d{6}|\\d{8})|(\\d{3}[\\*\\.\\-\\s]){2}\\d{3}|(\\d{2}[\\*\\.\\-\\s]){3}\\d{2}|(\\d{4}[\\*\\.\\-\\s]){1}\\d{4})|\\d{8}|\\d{10}|\\d{12}$/";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(phoneNumber);
+        return matcher.matches();
+    }
+
     // <-- Create user -->
-    private void createUser(final String email, final String username, final String password) {
+    private void createUser(final String email, final String username, final String password, final String PhoneNumber) {
         mDialog.show();
         mAuthProvider.register(email,username)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>(){
@@ -123,12 +137,15 @@ public class RegisterActivity extends AppCompatActivity {
                     user.setId(id);
                     user.setEmail(email);
                     user.setUsername(username);
+                    user.setPhoneNumber(PhoneNumber);
+                    user.setTimestamp(new Date().getTime());
                     mUsersProvider.create(user)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             mDialog.dismiss();
                             if (task.isSuccessful()){
+                                mDialog.dismiss();
                                 Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
@@ -137,6 +154,9 @@ public class RegisterActivity extends AppCompatActivity {
                             }
                         }
                     });
+                } else {
+                    mDialog.dismiss();
+                    Toast.makeText(RegisterActivity.this, "No se pudo registrar el usuario", Toast.LENGTH_SHORT).show();
                 }
             }
         });

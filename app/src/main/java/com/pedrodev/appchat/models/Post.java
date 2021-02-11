@@ -5,24 +5,28 @@ public class Post {
     private String id;
     private String title;
     private String description;
+    private String image1;
     private String image;
-    private String category;
-
+    private String image2;
     private String idUser;
+    private String category;
+    private long timestamp;
 
-    public Post(){
+    public Post() {
 
     }
 
-    public Post(String id, String title, String description, String image, String category, String idUser) {
+    public Post(String id, String title, String description, String image1, String image2, String idUser, String category, long timestamp, String image) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.image1 = image1;
+        this.image2 = image2;
         this.image = image;
-        this.category = category;
         this.idUser = idUser;
+        this.category = category;
+        this.timestamp = timestamp;
     }
-
 
     public String getId() {
         return id;
@@ -48,12 +52,34 @@ public class Post {
         this.description = description;
     }
 
+    public String getImage1() {
+        return image1;
+    }
+
+    public void setImage1(String image1) {
+        this.image1 = image1;
+    }
+
+    public String getImage2() {
+        return image2;
+    }
     public String getImage() {
         return image;
     }
 
+    public void setImage2(String image2) {
+        this.image2 = image2;
+    }
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
     }
 
     public String getCategory() {
@@ -64,11 +90,11 @@ public class Post {
         this.category = category;
     }
 
-    public String getIdUser() {
-        return idUser;
+    public long getTimestamp() {
+        return timestamp;
     }
 
-    public void setIdUser(String idUser) {
-        this.idUser = idUser;
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 }

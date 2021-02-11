@@ -18,12 +18,16 @@ import com.pedrodev.appchat.models.User;
 import com.pedrodev.appchat.providers.AuthProvider;
 import com.pedrodev.appchat.providers.UsersProvider;
 
+import java.util.Date;
+
 import dmax.dialog.SpotsDialog;
 
 
 public class CompleteProfileActivity extends AppCompatActivity {
 
     private TextInputEditText mTextInputUserName;
+    private TextInputEditText mTextInputPhone;
+
     private Button mButtonRegister;
     private AuthProvider mAuthProvider;
     private UsersProvider mUsersProvider;
@@ -33,8 +37,9 @@ public class CompleteProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complete_profile);
-        mTextInputUserName = (TextInputEditText) findViewById(R.id.textInputUserName);
+        mTextInputUserName = findViewById(R.id.textInputUserName);
         mButtonRegister = findViewById(R.id.btnRegister);
+        mTextInputPhone = findViewById(R.id.textInputCompleteInfo_PhoneNumber);
 
         mAuthProvider = new AuthProvider();
         mUsersProvider = new UsersProvider();
@@ -53,21 +58,24 @@ public class CompleteProfileActivity extends AppCompatActivity {
 
     private void register() {
         String nameUser = mTextInputUserName.getText().toString();
-        if (!nameUser.isEmpty()) {
-            updateUser(nameUser);
+        String phoneNumber = mTextInputPhone.getText().toString();
+        if (!nameUser.isEmpty() && !phoneNumber.isEmpty()) {
+            updateUser(nameUser,phoneNumber);
         } else {
-            Toast.makeText(this, "Escribe un usuario correctamente", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Completa los campos correctamente", Toast.LENGTH_LONG).show();
         }
     }
 
     // <-- Create user -->
-    private void updateUser(final String username) {
+    private void updateUser(final String username, final String phoneNumber) {
         // Sesión actual del user
 
         String id = mAuthProvider.getUid();
         User user = new User();
         user.setId(id);
         user.setUsername(username);
+        user.setPhoneNumber(phoneNumber);
+        user.setTimestamp(new Date().getTime());
         mDialog.show();
 
         mUsersProvider.update(user).

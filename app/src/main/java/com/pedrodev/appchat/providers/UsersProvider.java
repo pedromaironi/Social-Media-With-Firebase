@@ -6,6 +6,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.pedrodev.appchat.models.User;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +29,12 @@ public class UsersProvider {
     public Task<Void> update(User user) {
         Map<String, Object> map = new HashMap<>();
         map.put("username", user.getUsername());
+        map.put("phoneNumber", user.getPhoneNumber());
+        map.put("image_profile", user.getImageProfile());
+        map.put("image_cover", user.getImageCover());
+        map.put("timestamp", new Date().getTime());
         return mCollection.document(user.getId()).update(map);
     }
+
+
 }

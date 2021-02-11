@@ -15,4 +15,9 @@
         <item name="android:colorControlActivated">@color/primary_black_color</item>
     </style>
 
+    <style name="ToolbarName" parent="ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">@color/white_color</item>
+        <item name="titleTextColor">@color/white_color</item>
+    </style>
+
 </resources>

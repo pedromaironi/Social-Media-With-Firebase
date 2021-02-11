@@ -98,6 +98,27 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mAuthProvider.getUserSession() != null) {
+            Intent intent = new Intent(MainActivity.this, HomeActivity.class );
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+
+        //        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
+        //        updateUI(account);
+    }
+
+    /*private void updateUI(GoogleSignInAccount account){
+        if(account != null){
+            String id = mAuthProvider.getUid();
+            checkUserExist(id);
+        }
+    }
+*/
     private void signInGoogle() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE);
@@ -185,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
                 mDialog.dismiss();
                 if (task.isSuccessful()) {
                     Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
                 else {
@@ -197,19 +219,8 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 
-    /*
-    @Override
-    protected void onStart() {
-        super.onStart();
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
-        updateUI(account);
-    }
-    private void updateUI(GoogleSignInAccount account){
-        if(account != null){
-            String id = mAuthProvider.getUid();
-            checkUserExist(id);
-        }
-    }*/
+
+
 // FirebaseUser user = mAuth.getCurrentUser();
 //getUid return UID user
 //updateUI(user);
