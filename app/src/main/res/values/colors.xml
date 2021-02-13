@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryCard">#2554FF</color>
     <color name="colorPrimaryDark">#27259F</color>
     <color name="colorAccent">#4141D1</color>
 
@@ -10,6 +11,8 @@
     <color name="primary_color">#27259F</color>
     <color name="primary_black_color">#000000</color>
     <color name="gray_color">#D5CDCD</color>
+    <color name="gray_color_light">#E6E6E6</color>
     <color name="primary_red_color">#c92a2a</color>
     <color name="primary_blue_color">#364fc7</color>
+    <color name="primary_gray_color">#E7E7EA</color>
 </resources>

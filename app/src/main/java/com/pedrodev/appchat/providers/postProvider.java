@@ -1,9 +1,8 @@
 package com.pedrodev.appchat.providers;
 
-import android.view.View;
-
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.pedrodev.appchat.models.Post;
@@ -29,5 +28,12 @@ public class postProvider {
 
     public Query getPostByUser(String id){
         return mCollection.whereEqualTo("idUser", id);
+    }
+
+    public Task<DocumentSnapshot> getPostById(String id){
+        return mCollection.document(id).get();
+    }
+    public Task<Void> delete(String id) {
+        return mCollection.document(id).delete();
     }
 }

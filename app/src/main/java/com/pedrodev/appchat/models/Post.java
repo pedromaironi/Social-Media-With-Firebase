@@ -6,7 +6,6 @@ public class Post {
     private String title;
     private String description;
     private String image1;
-    private String image;
     private String image2;
     private String idUser;
     private String category;
@@ -16,13 +15,12 @@ public class Post {
 
     }
 
-    public Post(String id, String title, String description, String image1, String image2, String idUser, String category, long timestamp, String image) {
+    public Post(String id, String title, String description, String image1, String image2, String idUser, String category, long timestamp) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.image1 = image1;
         this.image2 = image2;
-        this.image = image;
         this.idUser = idUser;
         this.category = category;
         this.timestamp = timestamp;
@@ -63,15 +61,9 @@ public class Post {
     public String getImage2() {
         return image2;
     }
-    public String getImage() {
-        return image;
-    }
 
     public void setImage2(String image2) {
         this.image2 = image2;
-    }
-    public void setImage(String image) {
-        this.image = image;
     }
 
     public String getIdUser() {

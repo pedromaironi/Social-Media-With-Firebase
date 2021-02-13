@@ -51,12 +51,13 @@ public class HomeFragment extends Fragment {
         // save inflater
         mFab = mView.findViewById(R.id.fab);
         mToolbar = mView.findViewById(R.id.idToolbar);
+
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Publicaciones");
-
         setHasOptionsMenu(true);
-        mAuthProvider = new AuthProvider();
 
+
+        mAuthProvider = new AuthProvider();
         mRecyclerView = mView.findViewById(R.id.RecyclerViewHome);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());

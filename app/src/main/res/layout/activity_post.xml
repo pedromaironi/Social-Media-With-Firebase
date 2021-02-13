@@ -96,7 +96,7 @@
                 android:layout_height="30dp"
                 android:layout_marginTop="27dp"
                 android:layout_marginRight="5dp"
-                android:src="@drawable/ic_videogame" />
+                android:src="@drawable/ic_name" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -216,7 +216,7 @@
                         android:id="@+id/imageViewNotice"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_baseline_games_24" />
+                        android:src="@drawable/ic_bug" />
 
                 </androidx.cardview.widget.CardView>
 

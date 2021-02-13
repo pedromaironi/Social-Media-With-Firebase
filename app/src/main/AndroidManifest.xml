@@ -11,12 +11,17 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.postDetailActivity"></activity>
+        <activity android:name=".activities.UserProfileActivity"
+            android:parentActivityName=".activities.postDetailActivity"
+            />
+        <activity android:name=".activities.postDetailActivity"
+            android:parentActivityName=".activities.HomeActivity"
+            />
         <activity android:name=".activities.EditProfileActivity" />
 
         <provider
