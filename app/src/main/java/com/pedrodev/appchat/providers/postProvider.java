@@ -26,6 +26,14 @@ public class postProvider {
 
     }
 
+    public Query getAllPostByCategoryAndTimeStamp(String category){
+        return mCollection.whereEqualTo("category", category).orderBy("timestamp", Query.Direction.DESCENDING);
+    }
+
+    public Query getPostByTitle(String title){
+        return mCollection.orderBy("title").startAt(title).endAt(title+"\uf8ff");
+        // Like
+    }
     public Query getPostByUser(String id){
         return mCollection.whereEqualTo("idUser", id);
     }
@@ -36,4 +44,9 @@ public class postProvider {
     public Task<Void> delete(String id) {
         return mCollection.document(id).delete();
     }
+
+
+
+
+
 }

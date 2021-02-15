@@ -41,6 +41,7 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.Vi
     Context context;
     UsersProvider mUsersProvider;
     LikesProvider mLikesProvider;
+    TextView mTextViewNumberFilter;
 
     AuthProvider mAuthProvider;
     public PostsAdapter(FirestoreRecyclerOptions<Post> options,Context context){
@@ -51,6 +52,15 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.Vi
         mAuthProvider = new AuthProvider();
     }
 
+    public PostsAdapter(FirestoreRecyclerOptions<Post> options,Context context, TextView textView){
+        super(options);
+        this.context = context;
+        mUsersProvider = new UsersProvider();
+        mLikesProvider = new LikesProvider();
+        mAuthProvider = new AuthProvider();
+ mTextViewNumberFilter = textView;
+    }
+
     // Set data for each view
     @Override
     protected void onBindViewHolder(@NonNull final ViewHolder holder, int position, @NonNull final Post post) {
@@ -58,6 +68,10 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.Vi
         // Position is an index
         DocumentSnapshot documentSnapshot = getSnapshots().getSnapshot(position);
         final String postId = documentSnapshot.getId();
+        if(mTextViewNumberFilter != null){
+            int number = getSnapshots().size();
+            mTextViewNumberFilter.setText(String.valueOf(number));
+        }
         //final String idUser = documentSnapshot.getString("idUser");
         // Set the content of view in the views of ViewHolder with holder param
         holder.textViewTitle.setText(post.getTitle().toUpperCase());
@@ -93,7 +107,7 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.Vi
 
       getUserInfo(mAuthProvider.getUid(), holder);
       getNumberLikesByPost(postId, holder);
-        checkIfExistsLike(postId,mAuthProvider.getUid(),holder);
+      checkIfExistsLike(postId,mAuthProvider.getUid(),holder);
     }
 
     private void getNumberLikesByPost(String idPost, final ViewHolder holder){

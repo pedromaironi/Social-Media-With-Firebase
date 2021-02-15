@@ -9,6 +9,33 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/primary_blue_color"
+        >
+
+    <com.mancj.materialsearchbar.MaterialSearchBar
+        style="@style/MaterialSearchBarLight"
+        app:mt_hint="Busqueda"
+        app:mt_maxSuggestionsCount="10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchBar"
+        app:mt_searchBarColor="@color/colorPrimary"
+        app:mt_textColor="@color/white_color"
+        app:mt_placeholderColor="@color/white_color"
+        app:mt_searchIconTint="@color/white_color"
+        app:mt_placeholder="Buscar"
+        app:mt_menuIconTint="@color/white_color"
+        app:mt_clearIconTint="@color/white_color"
+        app:mt_backIconTint="@color/white_color"
+        app:mt_leftTextSelectorTint="@color/white_color"
+        app:mt_hintColor="@color/gray_color"
+        />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_marginTop="56dp"
@@ -20,8 +47,6 @@
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
 
     </LinearLayout>
-
-    <include layout="@layout/action_bar_toolbar"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

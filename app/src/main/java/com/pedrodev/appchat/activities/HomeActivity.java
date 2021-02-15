@@ -12,19 +12,25 @@ import com.pedrodev.appchat.fragments.ChatFragment;
 import com.pedrodev.appchat.fragments.FilterFragment;
 import com.pedrodev.appchat.fragments.HomeFragment;
 import com.pedrodev.appchat.fragments.ProfileFragment;
+import com.pedrodev.appchat.providers.AuthProvider;
+import com.pedrodev.appchat.providers.TokenProvider;
 
 public class HomeActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
+    TokenProvider mTokenProvider;
+    AuthProvider mAuthProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-
+        mTokenProvider = new TokenProvider();
+        mAuthProvider = new AuthProvider();
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         openFragment(new HomeFragment());
+        createToken();
     }
 
     public void openFragment(Fragment fragment) {
@@ -65,4 +71,9 @@ public class HomeActivity extends AppCompatActivity {
                     return true;
                 }
             };
+
+    private void createToken(){
+        mTokenProvider.create(mAuthProvider.getUid());
+    }
+
 }

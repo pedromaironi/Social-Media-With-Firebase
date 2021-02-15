@@ -142,7 +142,7 @@ public class PostActivity extends AppCompatActivity {
         mImageViewPC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mCategory = "PC";
+                mCategory = "OFFTOPIC";
                 mTextViewCategory.setText(mCategory);
             }
         });
@@ -150,7 +150,7 @@ public class PostActivity extends AppCompatActivity {
         mImageViewPS4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mCategory = "NEWS";
+                mCategory = "BUGS";
                 mTextViewCategory.setText(mCategory);
             }
         });
@@ -158,7 +158,7 @@ public class PostActivity extends AppCompatActivity {
         mImageViewXBOX.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mCategory = "GAMES";
+                mCategory = "SOFTWARE";
                 mTextViewCategory.setText(mCategory);
             }
         });

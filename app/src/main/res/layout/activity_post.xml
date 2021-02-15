@@ -174,7 +174,7 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    app:cardBackgroundColor="@color/colorPrimary"
+                    app:cardBackgroundColor="@color/primary_rose_color"
                     app:cardCornerRadius="5dp"
                     app:cardElevation="10dp">
 
@@ -182,7 +182,7 @@
                         android:id="@+id/imageViewPc"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ic_computer" />
+                        android:src="@drawable/ic_offtopic" />
 
                 </androidx.cardview.widget.CardView>
 
@@ -208,7 +208,7 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    app:cardBackgroundColor="@color/colorPrimary"
+                    app:cardBackgroundColor="@color/primary_red_color"
                     app:cardCornerRadius="5dp"
                     app:cardElevation="10dp">
 
@@ -242,7 +242,7 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
-                    app:cardBackgroundColor="@color/colorPrimary"
+                    app:cardBackgroundColor="@color/colorPrimaryDark"
                     app:cardCornerRadius="5dp"
                     app:cardElevation="10dp">
 
@@ -251,7 +251,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:padding="5dp"
-                        android:src="@drawable/ic_videogamewhite" />
+                        android:src="@drawable/ic_baseline_games_24" />
 
                 </androidx.cardview.widget.CardView>
 
