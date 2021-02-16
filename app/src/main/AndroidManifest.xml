@@ -16,9 +16,10 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.filtersActivity"
-            android:parentActivityName=".activities.HomeActivity"
-            />
+        <activity android:name=".activities.ChatActivity"></activity>
+        <activity
+            android:name=".activities.filtersActivity"
+            android:parentActivityName=".activities.HomeActivity" />
         <activity
             android:name=".activities.UserProfileActivity"
             android:parentActivityName=".activities.postDetailActivity" />
@@ -60,7 +61,6 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
-
     </application>
 
 </manifest>

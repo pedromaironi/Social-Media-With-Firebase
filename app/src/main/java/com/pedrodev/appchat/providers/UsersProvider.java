@@ -2,6 +2,7 @@ package com.pedrodev.appchat.providers;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.pedrodev.appchat.models.User;
@@ -36,5 +37,7 @@ public class UsersProvider {
         return mCollection.document(user.getId()).update(map);
     }
 
-
+    public DocumentReference getUserRealtime(String id) {
+        return mCollection.document(id);
+    }
 }

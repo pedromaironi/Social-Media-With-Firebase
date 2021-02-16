@@ -189,5 +189,11 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabChat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_chat"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="20dp"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

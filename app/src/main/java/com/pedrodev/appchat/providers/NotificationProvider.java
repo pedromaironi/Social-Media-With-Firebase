@@ -18,7 +18,7 @@ public class NotificationProvider {
     public Call<FCMResponse> sendNotification(FCMBody body){
         return RetrofitClient.getClient(url).create(IFCMApi.class).send(body);
     }
-    
+
     public NotificationProvider(String url) {
         this.url = url;
     }

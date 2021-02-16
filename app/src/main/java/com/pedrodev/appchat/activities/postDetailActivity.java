@@ -26,7 +26,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.pedrodev.appchat.models.FCMBody;
+import com.pedrodev.appchat.models.FCMResponse;
 import com.pedrodev.appchat.providers.LikesProvider;
+import com.pedrodev.appchat.providers.NotificationProvider;
+import com.pedrodev.appchat.providers.TokenProvider;
 import com.pedrodev.appchat.utils.RelativeTime;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -55,9 +59,14 @@ import com.squareup.picasso.Picasso;
 import java.security.DomainCombiner;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class postDetailActivity extends AppCompatActivity {
 
@@ -71,8 +80,10 @@ public class postDetailActivity extends AppCompatActivity {
     postProvider mPostProvider;
     commentProvider mCommentProvider;
     AuthProvider mAuthProvider;
+    UsersProvider mUsersProviders;
     LikesProvider mLikesProvider;
-
+    NotificationProvider mNotificationProvider;
+    TokenProvider mTokenProvider;
     // Textview
 
     TextView mtextViewTitle;
@@ -93,7 +104,6 @@ public class postDetailActivity extends AppCompatActivity {
     Button mButtonShowProfile;
 
     CircleImageView mCircleImageViewBack;
-    UsersProvider mUsersProviders;
     RecyclerView mRecyclerView;
     CommentAdapter mCommentAdapter;
 
@@ -108,6 +118,8 @@ public class postDetailActivity extends AppCompatActivity {
         mCommentProvider = new commentProvider();
         mAuthProvider = new AuthProvider();
         mLikesProvider = new LikesProvider();
+        mNotificationProvider = new NotificationProvider();
+        mTokenProvider = new TokenProvider();
         //Intance
 
         mImageCategory = findViewById(R.id.imageViewCategory);
@@ -278,7 +290,7 @@ public class postDetailActivity extends AppCompatActivity {
         alert.show();
     }
 
-    private void createComment(String value) {
+    private void createComment(final String value) {
         Comment comment = new Comment();
         comment.setComment(value);
         comment.setIdPost(mExtraPostId);
@@ -287,11 +299,52 @@ public class postDetailActivity extends AppCompatActivity {
         mCommentProvider.create(comment).addOnCompleteListener(new OnCompleteListener<Void>(){
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                sendNotification(value);
+
                 Toast.makeText(postDetailActivity.this,"Comentario creado correctamente",Toast.LENGTH_LONG).show();
             }
         });
     }
 
+    private void sendNotification(final String comment){
+        if(idUser!=null){
+
+        mTokenProvider.getToken(idUser).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    Map<String, String> data = new HashMap<>();
+                    data.put("title", "Han comentado tu post");
+                    data.put("body",comment);
+                    String token = documentSnapshot.getString("token");
+                    FCMBody body = new FCMBody(token,"high","4500s", data);
+                    mNotificationProvider.sendNotification(body).enqueue(new Callback<FCMResponse>() {
+                        @Override
+                        public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
+                            if(response.body() !=null){
+                                if(response.body().getSuccess() == 1){
+                                    Toast.makeText(postDetailActivity.this, "Notificacion enviada",Toast.LENGTH_SHORT).show();
+                                }
+                            }else{
+                                Toast.makeText(postDetailActivity.this, "Notificacion no enviada",Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<FCMResponse> call, Throwable t) {
+
+                        }
+                    });
+
+                }else{
+                    Toast.makeText(postDetailActivity.this, "Favor volver a iniciar sesión",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        }
+
+    }
     private void goToProfileFromPosts() {
         if (!idUser.equals("")) {
             Intent intent = new Intent(postDetailActivity.this, UserProfileActivity.class);

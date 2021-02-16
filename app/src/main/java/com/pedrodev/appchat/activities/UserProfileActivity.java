@@ -7,6 +7,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -45,6 +48,7 @@ public class UserProfileActivity extends AppCompatActivity {
     TextView mTexViewPosts;
     TextView mTextViewPhone;
     TextView mTextViewExists;
+    FloatingActionButton mFabChat;
 
     CircleImageView mImageViewProfile;
     ImageView mImageViewCover;
@@ -60,6 +64,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     // That String is for receive the intent.putExtra from POST DETAIL ACTIVITY
     String mExtraIdUser;
+    @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +86,7 @@ public class UserProfileActivity extends AppCompatActivity {
         mTextViewEmail = findViewById(R.id.editTextEmailProfile);
         mTextViewExists = findViewById(R.id.Posts);
         mToolbar = findViewById(R.id.Toolbar);
+        mFabChat = findViewById(R.id.fabChat);
 
 //          Delete this, we are on activity
 //        ((AppCompatActivity) UserProfileActivity.this).
@@ -96,18 +102,28 @@ public class UserProfileActivity extends AppCompatActivity {
 
         mExtraIdUser = getIntent().getStringExtra("idUser");
 
+        if (mAuthProvider.getUid().equals(mExtraIdUser)) {
+            mFabChat.setVisibility(View.GONE);
+        }
+        mFabChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToChatActivity();
+            }
+        });
         getUser();
         getPostCant();
         checkIfExistsPosts();
 
-        /*
-        mCircleImageViewBack = findViewById(R.id.circleImageProfile);
-        mCircleImageViewBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });*/
+
+    }
+
+    private void goToChatActivity() {
+        Intent intent = new Intent(UserProfileActivity.this,ChatActivity.class);
+        intent.putExtra("idUser1",mAuthProvider.getUid());
+        intent.putExtra("idUser2",mExtraIdUser);
+        startActivity(intent);
+
     }
 
     @Override
