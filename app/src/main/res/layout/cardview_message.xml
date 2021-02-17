@@ -1,55 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<RelativeLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
-    android:layout_marginRight="15dp"
-    android:layout_marginLeft="15dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingLeft="30dp"
+    android:layout_marginRight="30dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+<LinearLayout
+    android:id="@+id/linearLayoutMessage"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/rounded_linear_layout"
+    android:paddingRight="15dp"
+    android:paddingLeft="15dp"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
+    android:layout_margin="10dp"
     >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        >
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/CircleImageChat"
-            android:layout_width="35dp"
-            android:layout_height="45dp"
-            android:src="@drawable/logo" />
+    <TextView
+        android:id="@+id/textViewMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nuevo mensaje"
+        android:textSize="15dp"
+        android:textColor="@color/white_color"
+        />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+    <TextView
+        android:id="@+id/textViewDateMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Fecha"
+        android:textSize="12dp"
+        android:textColor="@color/gray_color_light"
+        android:layout_marginLeft="5dp"
+        android:layout_gravity="bottom"
+        />
 
-            <TextView
-                android:id="@+id/textViewUserNameChat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:text="Titulo de la publicacion"
-                android:textColor="@color/black_color"
-                android:textSize="16dp" />
-
-            <TextView
-                android:id="@+id/textViewLastMessageChat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:layout_marginTop="3dp"
-                android:text="Ultimo mensaje"
-                android:textColor="@color/black_color"
-                android:textSize="14dp" />
-
-
-        </LinearLayout>
-    </LinearLayout>
-</FrameLayout>
+    <ImageView
+        android:id="@+id/imageViewViewedMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:src="@drawable/icon_check_gray"
+        android:layout_gravity="bottom"
+        />
+</LinearLayout>
+</RelativeLayout>

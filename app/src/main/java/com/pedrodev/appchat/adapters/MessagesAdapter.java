@@ -2,6 +2,7 @@ package com.pedrodev.appchat.adapters;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,43 +42,43 @@ public class MessagesAdapter extends FirestoreRecyclerAdapter<Message, MessagesA
         final String messageId = document.getId();
         holder.textViewMessage.setText(message.getMessage());
 
-       // String relativeTime = RelativeTime.timeFormatAMPM(message.getTimestamp(), context);
-       //holder.textViewDate.setText(relativeTime);
+        String relativeTime = RelativeTime.getTimeAgo(message.getTimestamp(), context);
+        holder.textViewDate.setText(relativeTime);
 
         if (message.getIdSender().equals(mAuthProvider.getUid())) {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT
             );
-        /*    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             params.setMargins(150, 0, 0,0);
             holder.linearLayoutMessage.setLayoutParams(params);
             holder.linearLayoutMessage.setPadding(30, 20, 0, 20);
             holder.linearLayoutMessage.setBackground(context.getResources().getDrawable(R.drawable.rounded_linear_layout));
             holder.imageViewViewed.setVisibility(View.VISIBLE);
             holder.textViewMessage.setTextColor(Color.WHITE);
-            holder.textViewDate.setTextColor(Color.LTGRAY);*/
+            holder.textViewDate.setTextColor(Color.LTGRAY);
         }
         else {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.WRAP_CONTENT,
                     RelativeLayout.LayoutParams.WRAP_CONTENT
             );
-           /* params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             params.setMargins(0, 0, 150,0);
             holder.linearLayoutMessage.setLayoutParams(params);
             holder.linearLayoutMessage.setPadding(30, 20, 30, 20);
-            holder.linearLayoutMessage.setBackground(context.getResources().getDrawable(R.drawable.rounded_linear_layout_grey));
+            holder.linearLayoutMessage.setBackground(context.getResources().getDrawable(R.drawable.rounded_linear_layout_gray));
             holder.imageViewViewed.setVisibility(View.GONE);
             holder.textViewMessage.setTextColor(Color.DKGRAY);
-            holder.textViewDate.setTextColor(Color.LTGRAY);*/
+            holder.textViewDate.setTextColor(Color.LTGRAY);
         }
 
         if (message.isViewed()) {
-           // holder.imageViewViewed.setImageResource(R.drawable.icon_check_blue_light);
+            holder.imageViewViewed.setImageResource(R.drawable.icon_check_blue);
         }
         else {
-           // holder.imageViewViewed.setImageResource(R.drawable.icon_check_grey);
+            holder.imageViewViewed.setImageResource(R.drawable.icon_check_gray);
         }
 
     }
@@ -98,10 +99,10 @@ public class MessagesAdapter extends FirestoreRecyclerAdapter<Message, MessagesA
 
         public ViewHolder(View view) {
             super(view);
-            /*textViewMessage = view.findViewById(R.id.textViewMessage);
+            textViewMessage = view.findViewById(R.id.textViewMessage);
             textViewDate = view.findViewById(R.id.textViewDateMessage);
             imageViewViewed = view.findViewById(R.id.imageViewViewedMessage);
-            linearLayoutMessage = view.findViewById(R.id.linearLayoutMessage);*/
+            linearLayoutMessage = view.findViewById(R.id.linearLayoutMessage);
             viewHolder = view;
         }
     }

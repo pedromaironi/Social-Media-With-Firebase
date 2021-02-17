@@ -43,7 +43,7 @@ public class RelativeTime extends Application {
         }
     }
 
-    public static String timeFormatAMPM(long timestamp) {
+    public static String timeFormatAMPM(long timestamp, Context context) {
 
         SimpleDateFormat formatter = new SimpleDateFormat("hh:mm a");
         String dateString = formatter.format(new Date(timestamp));

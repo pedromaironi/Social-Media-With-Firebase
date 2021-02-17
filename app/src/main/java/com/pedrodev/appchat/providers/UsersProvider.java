@@ -40,4 +40,11 @@ public class UsersProvider {
     public DocumentReference getUserRealtime(String id) {
         return mCollection.document(id);
     }
+
+    public Task<Void> updateOnline(String idUser, boolean status) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("online", status);
+        map.put("lastConnect", new Date().getTime());
+        return mCollection.document(idUser).update(map);
+    }
 }

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -25,11 +27,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.pedrodev.appchat.R;
 import com.pedrodev.appchat.adapters.MessagesAdapter;
+import com.pedrodev.appchat.adapters.MypostAdapter;
 import com.pedrodev.appchat.models.Chat;
 import com.pedrodev.appchat.models.Message;
+import com.pedrodev.appchat.models.Post;
 import com.pedrodev.appchat.providers.AuthProvider;
 import com.pedrodev.appchat.providers.ChatsProvider;
 import com.pedrodev.appchat.providers.MessagesProvider;
@@ -61,7 +66,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
     EditText mEditTextMessage;
-    ImageView mImageViewSendMessage;
+    CircleImageView mImageViewSendMessage;
 
     CircleImageView mCircleImageProfile;
     TextView mTextViewUsername;
@@ -94,13 +99,15 @@ public class ChatActivity extends AppCompatActivity {
 
         mEditTextMessage = findViewById(R.id.EditTextMessage);
         mImageViewSendMessage = findViewById(R.id.imageViewSendMessage);
-
+        mRecyclerViewMessage = findViewById(R.id.RecyclerViewMessages);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(ChatActivity.this);
+        mRecyclerViewMessage.setLayoutManager(layoutManager);
 
 
         mExtraIdUser1 = getIntent().getStringExtra("idUser1");
         mExtraIdUser2 = getIntent().getStringExtra("idUser2");
         mExtraIdChat  = getIntent().getStringExtra("idChat");
-
+        
 
         showCustomToolbar(R.layout.custom_chat_tootlbar);
 
@@ -116,30 +123,35 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-       if (mAdapter != null) {
-            mAdapter.startListening();
-        }
-        //ViewedMessageHelper.updateOnline(true, ChatActivity.this);
+        Query query = mMessagesProvider.getMessageByChat(mExtraIdChat);
+        FirestoreRecyclerOptions<Message> options =
+                new FirestoreRecyclerOptions
+                        .Builder<Message>()
+                        .setQuery(query,Message.class)
+                        .build();
+        mAdapter = new MessagesAdapter(options, ChatActivity.this);
+        mRecyclerViewMessage.setAdapter(mAdapter);
+        mAdapter.startListening();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //NotiMessageHelper.updateOnline(false, ChatActivity.this);
+         //NotiMessageHelper.updateOnline(false, ChatActivity.this);
     }
 
 
     @Override
     public void onStop() {
         super.onStop();
-       // mAdapter.stopListening();
+        mAdapter.stopListening();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mListener != null) {
-            mListener.remove();
+          mListener.remove();
         }
     }
 
@@ -164,6 +176,7 @@ public class ChatActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
                         mEditTextMessage.setText("");
+                        mAdapter.notifyDataSetChanged();
                         Toast.makeText(ChatActivity.this, "Mensaje creado correctamente",Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(ChatActivity.this, "Mensaje no creado correctamente",Toast.LENGTH_SHORT).show();
@@ -309,5 +322,52 @@ public class ChatActivity extends AppCompatActivity {
         ids.add(mExtraIdUser2);
         chat.setIds(ids);
         mChatsProvider.create(chat);
+        mExtraIdChat = chat.getid();
+        getMessageChat();
+    }
+
+    private void getMessageChat() {
+        /*Query query = mMessagesProvider.getMessageByChat(mExtraIdChat);
+        FirestoreRecyclerOptions<Message> options =
+                new FirestoreRecyclerOptions.Builder<Message>()
+                        .setQuery(query, Message.class)
+                        .build();
+        mAdapter = new MessagesAdapter(options, ChatActivity.this);
+        mRecyclerViewMessage.setAdapter(mAdapter);
+        mAdapter.startListening();
+        mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                updateViewed();
+                int numberMessage = mAdapter.getItemCount();
+                int lastMessagePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
+
+                if (lastMessagePosition == -1 || (positionStart >= (numberMessage -1) && lastMessagePosition == (positionStart - 1))) {
+                    mRecyclerViewMessage.scrollToPosition(positionStart);
+                }
+            }
+        });*/
+    }
+
+    private void updateViewed() {
+        String idSender = "";
+
+        if (mAuthProvider.getUid().equals(mExtraIdUser1)) {
+            idSender = mExtraIdUser2;
+        }
+        else {
+            idSender = mExtraIdUser1;
+        }
+
+        mMessagesProvider.getMessagesByChatAndSender(mExtraIdChat, idSender).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                    mMessagesProvider.updateViewed(document.getId(), true);
+                }
+            }
+        });
+
     }
 }

@@ -345,6 +345,7 @@ public class postDetailActivity extends AppCompatActivity {
         }
 
     }
+
     private void goToProfileFromPosts() {
         if (!idUser.equals("")) {
             Intent intent = new Intent(postDetailActivity.this, UserProfileActivity.class);
@@ -352,7 +353,6 @@ public class postDetailActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
-
 
     private void instanceSlider() {
         mSliderAdapter = new SliderAdapter(postDetailActivity.this, mSliderItems);
@@ -437,8 +437,6 @@ public class postDetailActivity extends AppCompatActivity {
                         String img = documentSnapshot.getString("image_profile");
                         Picasso.with(postDetailActivity.this).load(img).into(mImageViewProfile);
                     }
-
-
                 }
             }
 

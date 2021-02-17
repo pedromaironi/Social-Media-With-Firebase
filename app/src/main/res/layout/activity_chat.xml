@@ -9,18 +9,25 @@
 
 
     <include layout="@layout/action_bar_toolbar"/>
+
+
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_marginBottom="60dp"
         >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/RecyclerViewMessages"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:layout_anchor="@+id/linearLayout"
+            app:layout_anchorGravity="center"
             />
+
 
     </LinearLayout>
 

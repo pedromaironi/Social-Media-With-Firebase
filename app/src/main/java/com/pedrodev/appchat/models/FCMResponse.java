@@ -1,8 +1,11 @@
 package com.pedrodev.appchat.models;
 
+import com.google.android.gms.common.api.Result;
+import com.google.android.gms.common.api.Status;
+
 import java.util.ArrayList;
 
-public class FCMResponse {
+public class FCMResponse implements Result {
 
     private long multicast_id;
     private int success;
@@ -56,5 +59,10 @@ public class FCMResponse {
 
     public void setResults(ArrayList<Object> results) {
         this.results = results;
+    }
+
+    @Override
+    public Status getStatus() {
+        return null;
     }
 }

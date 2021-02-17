@@ -61,7 +61,7 @@ public class Chat {
         return id;
     }
 
-    public void setid(String idChat) {
+    public void setid(String id) {
         this.id = id;
     }
 
