@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.ChatFragment"
+    tools:context=".fragments.ChatsFragment"
     android:layout_marginBottom="55dp"
     >
 

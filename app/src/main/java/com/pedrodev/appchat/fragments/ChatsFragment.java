@@ -17,14 +17,17 @@ import com.pedrodev.appchat.models.Chat;
 import com.pedrodev.appchat.providers.AuthProvider;
 import com.pedrodev.appchat.providers.ChatsProvider;
 
-public class ChatFragment extends Fragment {
 
-    ChatsAdapter mChatsAdapter;
+public class ChatsFragment extends Fragment {
+
+    ChatsAdapter mAdapter;
     RecyclerView mRecyclerView;
     View mView;
+
     ChatsProvider mChatsProvider;
     AuthProvider mAuthProvider;
-    public ChatFragment() {
+
+    public ChatsFragment() {
         // Required empty public constructor
     }
 
@@ -33,35 +36,33 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mView =  inflater.inflate(R.layout.fragment_chat, container, false);
+        mView = inflater.inflate(R.layout.fragment_chat, container, false);
         mRecyclerView = mView.findViewById(R.id.RecyclerViewChats);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(layoutManager);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(linearLayoutManager);
 
         mChatsProvider = new ChatsProvider();
         mAuthProvider = new AuthProvider();
+
         return mView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        //Post provider
         Query query = mChatsProvider.getAll(mAuthProvider.getUid());
-        // Type post model
         FirestoreRecyclerOptions<Chat> options =
-                new FirestoreRecyclerOptions
-                        .Builder<Chat>()
-                        .setQuery(query,Chat.class)
+                new FirestoreRecyclerOptions.Builder<Chat>()
+                        .setQuery(query, Chat.class)
                         .build();
-        mChatsAdapter = new ChatsAdapter(options, getContext());
-        mRecyclerView.setAdapter(mChatsAdapter);
-        mChatsAdapter.startListening();
+        mAdapter = new ChatsAdapter(options, getContext());
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.startListening();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mChatsAdapter.stopListening();
+        mAdapter.stopListening();
     }
 }

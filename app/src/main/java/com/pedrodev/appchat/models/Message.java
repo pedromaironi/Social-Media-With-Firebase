@@ -10,7 +10,7 @@ public class Message {
     private long timestamp;
     private boolean viewed;
 
-    public Message(){
+    public Message() {
 
     }
 

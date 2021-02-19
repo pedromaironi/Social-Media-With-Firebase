@@ -1,14 +1,15 @@
 package com.pedrodev.appchat.models;
 
+
 import java.util.ArrayList;
 
 public class Chat {
 
-    private boolean isWriting;
-    private Long timestamp;
+    private String id;
     private String idUser1;
     private String idUser2;
-    private String id;
+    private boolean isWriting;
+    private long timestamp;
     private ArrayList<String> ids;
 
 
@@ -16,12 +17,12 @@ public class Chat {
 
     }
 
-    public Chat(boolean isWriting, Long timestamp, String idUser1, String idUser2, String id, ArrayList<String> ids) {
-        this.isWriting = isWriting;
-        this.timestamp = timestamp;
+    public Chat(String id, String idUser1, String idUser2, boolean isWriting, long timestamp, ArrayList<String> ids) {
+        this.id = id;
         this.idUser1 = idUser1;
         this.idUser2 = idUser2;
-        this.id = id;
+        this.isWriting = isWriting;
+        this.timestamp = timestamp;
         this.ids = ids;
     }
 
@@ -33,11 +34,11 @@ public class Chat {
         isWriting = writing;
     }
 
-    public Long getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Long timestamp) {
+    public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -57,11 +58,11 @@ public class Chat {
         this.idUser2 = idUser2;
     }
 
-    public String getid() {
+    public String getId() {
         return id;
     }
 
-    public void setid(String id) {
+    public void setId(String id) {
         this.id = id;
     }
 

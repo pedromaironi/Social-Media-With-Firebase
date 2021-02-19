@@ -103,7 +103,7 @@ public class UserProfileActivity extends AppCompatActivity {
         mExtraIdUser = getIntent().getStringExtra("idUser");
 
         if (mAuthProvider.getUid().equals(mExtraIdUser)) {
-            mFabChat.setVisibility(View.GONE);
+            mFabChat.setEnabled(false);
         }
         mFabChat.setOnClickListener(new View.OnClickListener() {
             @Override

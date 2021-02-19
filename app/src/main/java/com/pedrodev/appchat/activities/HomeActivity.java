@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.pedrodev.appchat.R;
-import com.pedrodev.appchat.fragments.ChatFragment;
+import com.pedrodev.appchat.fragments.ChatsFragment;
 import com.pedrodev.appchat.fragments.FilterFragment;
 import com.pedrodev.appchat.fragments.HomeFragment;
 import com.pedrodev.appchat.fragments.ProfileFragment;
@@ -59,7 +59,7 @@ public class HomeActivity extends AppCompatActivity {
                         openFragment(new HomeFragment());
                         // Fragment Home
                     }else if(item.getItemId()==R.id.itemChat){
-                        openFragment(new ChatFragment());
+                        openFragment(new ChatsFragment());
                         // Fragment Chat
                     }else if(item.getItemId()==R.id.itemFilters){
                         openFragment(new FilterFragment());

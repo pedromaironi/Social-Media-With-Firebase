@@ -37,39 +37,35 @@ public class HomeFragment extends Fragment implements MaterialSearchBar.OnSearch
     View mView;
     FloatingActionButton mFab;
     MaterialSearchBar mSearchBar;
+
     AuthProvider mAuthProvider;
     RecyclerView mRecyclerView;
     postProvider mPostProvider;
-    PostsAdapter mPostAdapterSearch;
+    PostsAdapter mPostsAdapter;
+    PostsAdapter mPostsAdapterSearch;
 
-     PostsAdapter mPostAdapter;
     public HomeFragment() {
         // Required empty public constructor
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_home, container, false);
-        // save inflater
+        setHasOptionsMenu(true);
         mFab = mView.findViewById(R.id.fab);
-        mSearchBar = mView.findViewById(R.id.searchBar);
-        mAuthProvider = new AuthProvider();
         mRecyclerView = mView.findViewById(R.id.RecyclerViewHome);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(layoutManager);
-        // Show cards
-        mPostProvider = new postProvider();
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToPost();
-            }
+        mSearchBar = mView.findViewById(R.id.searchBar);
 
-        });
-        //Other stuff in OnCreate();
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+
+        setHasOptionsMenu(true);
+        mAuthProvider = new AuthProvider();
+        mPostProvider = new postProvider();
+
         mSearchBar.setOnSearchActionListener(this);
         mSearchBar.inflateMenu(R.menu.main_menu);
         mSearchBar.getMenu().setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -81,36 +77,38 @@ public class HomeFragment extends Fragment implements MaterialSearchBar.OnSearch
                 return true;
             }
         });
+
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToPost();
+            }
+        });
         return mView;
     }
 
-    private void searchByTitle(String title){
+    private void searchByTitle(String title) {
         Query query = mPostProvider.getPostByTitle(title);
-        // Type post model
         FirestoreRecyclerOptions<Post> options =
-                new FirestoreRecyclerOptions
-                        .Builder<Post>()
-                        .setQuery(query,Post.class)
+                new FirestoreRecyclerOptions.Builder<Post>()
+                        .setQuery(query, Post.class)
                         .build();
-        mPostAdapterSearch = new PostsAdapter(options, getContext());
-        mPostAdapterSearch.notifyDataSetChanged();
-        mRecyclerView.setAdapter(mPostAdapterSearch);
-        mPostAdapterSearch.startListening();
+        mPostsAdapterSearch = new PostsAdapter(options, getContext());
+        mPostsAdapterSearch.notifyDataSetChanged();
+        mRecyclerView.setAdapter(mPostsAdapterSearch);
+        mPostsAdapterSearch.startListening();
     }
 
-    private void getAllPost(){
-        //Post provider
+    private void getAllPost() {
         Query query = mPostProvider.getAllPost();
-        // Type post model
         FirestoreRecyclerOptions<Post> options =
-                new FirestoreRecyclerOptions
-                        .Builder<Post>()
-                        .setQuery(query,Post.class)
+                new FirestoreRecyclerOptions.Builder<Post>()
+                        .setQuery(query, Post.class)
                         .build();
-        mPostAdapter = new PostsAdapter(options, getContext());
-        mPostAdapter.notifyDataSetChanged();
-        mRecyclerView.setAdapter(mPostAdapter);
-        mPostAdapter.startListening();
+        mPostsAdapter = new PostsAdapter(options, getContext());
+        mPostsAdapter.notifyDataSetChanged();
+        mRecyclerView.setAdapter(mPostsAdapter);
+        mPostsAdapter.startListening();
     }
 
     @Override
@@ -122,8 +120,9 @@ public class HomeFragment extends Fragment implements MaterialSearchBar.OnSearch
     @Override
     public void onStop() {
         super.onStop();
-        if(mPostAdapterSearch!=null){
-            mPostAdapter.stopListening();
+        mPostsAdapter.stopListening();
+        if (mPostsAdapterSearch != null) {
+            mPostsAdapterSearch.stopListening();
         }
     }
 
@@ -132,36 +131,20 @@ public class HomeFragment extends Fragment implements MaterialSearchBar.OnSearch
         startActivity(intent);
     }
 
-//    @Override
-////    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-////        inflater.inflate(R.menu.main_menu, menu);
-////        super.onCreateOptionsMenu(menu, inflater);
-////
-////    }
-////
-////    @Override
-////    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-////
-////    }
-
     private void logout() {
         mAuthProvider.logout();
         Intent intent = new Intent(getContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-
     }
-
 
     @Override
     public void onSearchStateChanged(boolean enabled) {
-        if(!enabled){
-        getAllPost();
+        if (!enabled) {
+            getAllPost();
         }
     }
 
-
-    // return the text writer in the input text
     @Override
     public void onSearchConfirmed(CharSequence text) {
         searchByTitle(text.toString().toLowerCase());

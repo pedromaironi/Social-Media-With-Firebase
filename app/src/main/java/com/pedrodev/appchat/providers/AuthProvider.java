@@ -47,13 +47,7 @@ public class AuthProvider {
         }
     }
 
-    public void logout() {
-        if(mAuth != null){
-            mAuth.signOut();
-        }
-    }
-
-    public FirebaseUser getUserSession(){
+    public FirebaseUser getUserSession() {
         if (mAuth.getCurrentUser() != null) {
             return mAuth.getCurrentUser();
         }
@@ -62,5 +56,10 @@ public class AuthProvider {
         }
     }
 
+    public void logout() {
+        if (mAuth != null) {
+            mAuth.signOut();
+        }
+    }
 
 }

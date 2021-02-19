@@ -10,6 +10,13 @@
 
     <include layout="@layout/action_bar_toolbar"/>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/message_background"
+        android:layout_marginTop="55dp"
+        android:scaleType="centerCrop"
+        />
 
     <LinearLayout
         android:id="@+id/linearLayout"
