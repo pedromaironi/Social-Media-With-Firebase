@@ -5,8 +5,8 @@
 </h1>
 
 <p align="center">
-  <strong>Learn once, write anywhere:</strong><br>
-  Build mobile apps with React.
+  <strong>Coding to Learn, learn to coding</strong><br>
+
 </p>
 
 <p align="center">
