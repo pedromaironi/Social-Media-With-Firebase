@@ -137,7 +137,7 @@ public class RegisterActivity extends AppCompatActivity {
                     user.setId(id);
                     user.setEmail(email);
                     user.setUsername(username);
-                    user.setPhoneNumber(PhoneNumber);
+                    user.setPhone(PhoneNumber);
                     user.setTimestamp(new Date().getTime());
                     mUsersProvider.create(user)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {

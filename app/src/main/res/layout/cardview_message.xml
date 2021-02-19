@@ -44,7 +44,7 @@
 
     <ImageView
         android:id="@+id/imageViewViewedMessage"
-        android:layout_width="wrap_content"
+        android:layout_width="45dp"
         android:layout_height="20dp"
         android:src="@drawable/icon_check_gray"
         android:layout_gravity="bottom"
