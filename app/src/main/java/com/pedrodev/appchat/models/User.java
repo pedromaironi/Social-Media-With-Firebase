@@ -5,25 +5,27 @@ public class User {
     private String id;
     private String email;
     private String username;
-    private String phoneNumber;
-    private long timestamp;
-    private String image;
-    private String imageCover;
+    private String phone;
     private String imageProfile;
+    private String imageCover;
+    private long timestamp;
+    private long lastConnection;
+    private boolean online;
 
     public User() {
 
     }
 
-    public User(String id, String email, String username, String phoneNumber, long timestamp, String image, String imageCover, String imageProfile) {
+    public User(String id, String email, String username, String phone, String imageProfile, String imageCover, long timestamp, long lastConnection, boolean online) {
         this.id = id;
         this.email = email;
         this.username = username;
-        this.phoneNumber = phoneNumber;
-        this.timestamp = timestamp;
-        this.image = image;
-        this.imageCover = imageCover;
+        this.phone = phone;
         this.imageProfile = imageProfile;
+        this.imageCover = imageCover;
+        this.timestamp = timestamp;
+        this.lastConnection = lastConnection;
+        this.online = online;
     }
 
     public String getId() {
@@ -50,12 +52,12 @@ public class User {
         this.username = username;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public long getTimestamp() {
@@ -66,12 +68,12 @@ public class User {
         this.timestamp = timestamp;
     }
 
-    public String getImage() {
-        return image;
+    public String getImageProfile() {
+        return imageProfile;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImageProfile(String imageProfile) {
+        this.imageProfile = imageProfile;
     }
 
     public String getImageCover() {
@@ -82,11 +84,19 @@ public class User {
         this.imageCover = imageCover;
     }
 
-    public String getImageProfile() {
-        return imageProfile;
+    public long getLastConnection() {
+        return lastConnection;
     }
 
-    public void setImageProfile(String imageProfile) {
-        this.imageProfile = imageProfile;
+    public void setLastConnection(long lastConnection) {
+        this.lastConnection = lastConnection;
+    }
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
     }
 }

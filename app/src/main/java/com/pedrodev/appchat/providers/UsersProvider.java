@@ -23,14 +23,19 @@ public class UsersProvider {
         return mCollection.document(id).get();
     }
 
+    public DocumentReference getUserRealTime(String id) {
+        return mCollection.document(id);
+    }
+
     public Task<Void> create(User user) {
         return mCollection.document(user.getId()).set(user);
     }
 
     public Task<Void> update(User user) {
         Map<String, Object> map = new HashMap<>();
+        AuthProvider mAuthProvider = new AuthProvider();
         map.put("username", user.getUsername());
-        map.put("phoneNumber", user.getPhoneNumber());
+        map.put("phone", user.getPhone());
         map.put("image_profile", user.getImageProfile());
         map.put("image_cover", user.getImageCover());
         map.put("timestamp", new Date().getTime());
@@ -44,7 +49,7 @@ public class UsersProvider {
     public Task<Void> updateOnline(String idUser, boolean status) {
         Map<String, Object> map = new HashMap<>();
         map.put("online", status);
-        map.put("lastConnect", new Date().getTime());
+        map.put("lastConnection", new Date().getTime());
         return mCollection.document(idUser).update(map);
     }
 }

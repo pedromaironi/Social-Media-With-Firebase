@@ -67,17 +67,17 @@ public class CompleteProfileActivity extends AppCompatActivity {
     }
 
     // <-- Create user -->
-    private void updateUser(final String username, final String phoneNumber) {
+    private void updateUser(final String username, final String phone) {
         // Sesión actual del user
 
         String id = mAuthProvider.getUid();
         User user = new User();
         user.setId(id);
         user.setUsername(username);
-        user.setPhoneNumber(phoneNumber);
+        user.setPhone(phone);
         user.setTimestamp(new Date().getTime());
+        user.setOnline(true);
         mDialog.show();
-
         mUsersProvider.update(user).
                 addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

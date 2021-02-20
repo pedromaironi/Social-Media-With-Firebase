@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.pedrodev.appchat.models.FCMBody;
 import com.pedrodev.appchat.models.FCMResponse;
@@ -51,6 +52,7 @@ import com.pedrodev.appchat.providers.UsersProvider;
 import com.pedrodev.appchat.providers.commentProvider;
 import com.pedrodev.appchat.providers.postProvider;
 import com.pedrodev.appchat.utils.RelativeTime;
+import com.pedrodev.appchat.utils.ViewedMessageHelper;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
@@ -107,6 +109,7 @@ public class postDetailActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
     CommentAdapter mCommentAdapter;
 
+    ListenerRegistration listenerRegistration;
     Toolbar mToolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,7 +182,7 @@ public class postDetailActivity extends AppCompatActivity {
     }
 
     private void getLikesNumber() {
-        mLikesProvider.getLikesByPost(mExtraPostId).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        listenerRegistration = mLikesProvider.getLikesByPost(mExtraPostId).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 int numberLikes = value.size();
@@ -232,8 +235,22 @@ public class postDetailActivity extends AppCompatActivity {
         mCommentAdapter = new CommentAdapter(options, postDetailActivity.this);
         mRecyclerView.setAdapter(mCommentAdapter);
         mCommentAdapter.startListening();
+        ViewedMessageHelper.updateOnline(true, postDetailActivity.this);
+
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, postDetailActivity.this);
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (listenerRegistration != null) {
+            listenerRegistration.remove();
+        }
+    }
     @Override
     protected void onStop() {
         super.onStop();

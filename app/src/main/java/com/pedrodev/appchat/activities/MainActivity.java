@@ -158,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.w("ERROR", "signInWithCredential:failure", task.getException());
                     Toast.makeText(MainActivity.this, "No se pudo iniciar sesion con google", Toast.LENGTH_SHORT).show();
                 }
-
                 // ...
             }
         });
