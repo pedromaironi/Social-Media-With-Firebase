@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.pedrodev.appchat.R;
@@ -58,6 +59,7 @@ public class ProfileFragment extends Fragment {
     RecyclerView mRecyclerView;
     private String mImageCover = "";
     private String mImageProfile = "";
+    ListenerRegistration mListener;
 
     View mView;
     public ProfileFragment() {
@@ -103,18 +105,30 @@ public class ProfileFragment extends Fragment {
         return mView;
     }
 
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mListener != null) {
+            mListener.remove();
+        }
+    }
+
     private void checkIfExistsPosts() {
-        mPostProvider.getPostByUser(mAuthProvider.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        mListener =  mPostProvider.getPostByUser(mAuthProvider.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                int numberPost = value.size();
-                if(numberPost > 0){
-                    mTextViewExists.setText("Publicaciones");
-                    mTextViewExists.setTextColor(Color.BLACK);
+                if(value != null) {
+                    int numberPost = value.size();
+                    if (numberPost > 0) {
+                        mTextViewExists.setText("Publicaciones");
+                        mTextViewExists.setTextColor(Color.BLACK);
 
-                }else{
-                    mTextViewExists.setText("No hay publicaciones");
-                    mTextViewExists.setTextColor(Color.GRAY);
+                    } else {
+                        mTextViewExists.setText("No hay publicaciones");
+                        mTextViewExists.setTextColor(Color.GRAY);
+                    }
                 }
             }
         });
@@ -123,7 +137,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
+        getUser();
         Query query = mPostProvider.getPostByUser(mAuthProvider.getUid());
         // Type post model
         FirestoreRecyclerOptions<Post> options =
@@ -134,6 +148,7 @@ public class ProfileFragment extends Fragment {
         mypostAdapter = new MypostAdapter(options, getContext());
         mRecyclerView.setAdapter(mypostAdapter);
         mypostAdapter.startListening();
+
     }
 
     @Override

@@ -32,6 +32,7 @@ import com.pedrodev.appchat.providers.AuthProvider;
 import com.pedrodev.appchat.providers.imageProvider;
 import com.pedrodev.appchat.providers.UsersProvider;
 import com.pedrodev.appchat.utils.FileUtil;
+import com.pedrodev.appchat.utils.ViewedMessageHelper;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -148,6 +149,20 @@ public class EditProfileActivity extends AppCompatActivity {
 //                .show();
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ViewedMessageHelper.updateOnline(true, EditProfileActivity.this);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, EditProfileActivity.this);
+    }
+
     private void getUserDataProfile(){
         mUsersProvider.getUser(mAuthProvider.getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -216,7 +231,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 else {
                     User user = new User();
                     user.setUsername(mUsername);
-                    user.setPhoneNumber(mPhone);
+                    user.setPhone(mPhone);
                     user.setImageCover(mImageCover);
                     user.setImageProfile(mImageProfile);
                     user.setId(mAuthProvider.getUid());
@@ -264,7 +279,7 @@ public class EditProfileActivity extends AppCompatActivity {
                             final String url = uri.toString();
                             User user = new User();
                             user.setUsername(mUsername);
-                            user.setPhoneNumber(mPhone);
+                            user.setPhone(mPhone);
                             if (isProfileImage) {
                                 user.setImageProfile(url);
                                 user.setImageCover(mImageCover);

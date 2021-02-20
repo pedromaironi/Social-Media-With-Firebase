@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -23,6 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.pedrodev.appchat.R;
@@ -31,6 +31,7 @@ import com.pedrodev.appchat.models.Post;
 import com.pedrodev.appchat.providers.AuthProvider;
 import com.pedrodev.appchat.providers.UsersProvider;
 import com.pedrodev.appchat.providers.postProvider;
+import com.pedrodev.appchat.utils.ViewedMessageHelper;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -64,6 +65,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
     // That String is for receive the intent.putExtra from POST DETAIL ACTIVITY
     String mExtraIdUser;
+    ListenerRegistration mListener;
     @SuppressLint("RestrictedApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,9 +116,8 @@ public class UserProfileActivity extends AppCompatActivity {
         getUser();
         getPostCant();
         checkIfExistsPosts();
-
-
     }
+
 
     private void goToChatActivity() {
         Intent intent = new Intent(UserProfileActivity.this,ChatActivity.class);
@@ -140,6 +141,15 @@ public class UserProfileActivity extends AppCompatActivity {
         mypostAdapter = new MypostAdapter(options, UserProfileActivity.this);
         mRecyclerView.setAdapter(mypostAdapter);
         mypostAdapter.startListening();
+        ViewedMessageHelper.updateOnline(true, UserProfileActivity.this);
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, UserProfileActivity.this);
     }
 
     @Override
@@ -148,10 +158,18 @@ public class UserProfileActivity extends AppCompatActivity {
         mypostAdapter.stopListening();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mListener != null) {
+            mListener.remove();
+        }
+    }
     private void checkIfExistsPosts() {
-        mPostProvider.getPostByUser(mExtraIdUser).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        mListener =  mPostProvider.getPostByUser(mExtraIdUser).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(value != null){
                 int numberPost = value.size();
                 if(numberPost > 0){
                     mTextViewExists.setText("Publicaciones");
@@ -160,6 +178,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 }else{
                     mTextViewExists.setText("No hay publicaciones");
                     mTextViewExists.setTextColor(Color.GRAY);
+                }
                 }
             }
         });

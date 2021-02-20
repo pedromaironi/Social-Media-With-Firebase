@@ -14,12 +14,16 @@ import com.pedrodev.appchat.fragments.HomeFragment;
 import com.pedrodev.appchat.fragments.ProfileFragment;
 import com.pedrodev.appchat.providers.AuthProvider;
 import com.pedrodev.appchat.providers.TokenProvider;
+import com.pedrodev.appchat.providers.UsersProvider;
+import com.pedrodev.appchat.utils.ViewedMessageHelper;
 
 public class HomeActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
     TokenProvider mTokenProvider;
     AuthProvider mAuthProvider;
+    UsersProvider mUsersProvider;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,7 @@ public class HomeActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         mTokenProvider = new TokenProvider();
         mAuthProvider = new AuthProvider();
+        mUsersProvider = new UsersProvider();
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         openFragment(new HomeFragment());
         createToken();
@@ -39,6 +44,24 @@ public class HomeActivity extends AppCompatActivity {
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ViewedMessageHelper.updateOnline(true, HomeActivity.this);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, HomeActivity.this);
+    }
+
+    //    private void updateOnline(boolean status){
+//        mUsersProvider.updateOnline(mAuthProvider.getUid(), status);
+//    }
+
 
     BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {

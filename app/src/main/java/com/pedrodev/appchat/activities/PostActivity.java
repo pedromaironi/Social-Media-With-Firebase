@@ -33,6 +33,7 @@ import com.pedrodev.appchat.providers.AuthProvider;
 import com.pedrodev.appchat.providers.imageProvider;
 import com.pedrodev.appchat.providers.postProvider;
 import com.pedrodev.appchat.utils.FileUtil;
+import com.pedrodev.appchat.utils.ViewedMessageHelper;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -163,6 +164,18 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ViewedMessageHelper.updateOnline(true, PostActivity.this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(true, PostActivity.this);
     }
 
     private void selectOptionImage(final int numberImage) {
@@ -385,15 +398,4 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        //ViewedMessageHelper.updateOnline(true, PostActivity.this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //ViewedMessageHelper.updateOnline(false, PostActivity.this);
-    }
 }

@@ -1,6 +1,5 @@
 package com.pedrodev.appchat.activities;
 
-import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -31,17 +30,14 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.pedrodev.appchat.R;
 import com.pedrodev.appchat.adapters.MessagesAdapter;
-import com.pedrodev.appchat.adapters.MypostAdapter;
 import com.pedrodev.appchat.models.Chat;
 import com.pedrodev.appchat.models.Message;
-import com.pedrodev.appchat.models.Post;
 import com.pedrodev.appchat.providers.AuthProvider;
 import com.pedrodev.appchat.providers.ChatsProvider;
 import com.pedrodev.appchat.providers.MessagesProvider;
-import com.pedrodev.appchat.providers.NotificationProvider;
-import com.pedrodev.appchat.providers.TokenProvider;
 import com.pedrodev.appchat.providers.UsersProvider;
 import com.pedrodev.appchat.utils.RelativeTime;
+import com.pedrodev.appchat.utils.ViewedMessageHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -51,6 +47,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatActivity extends AppCompatActivity {
 
+    // PRESENCIA en cloud firestore investigar
     String mExtraIdUser1;
     String mExtraIdUser2;
     String mExtraIdChat;
@@ -74,7 +71,7 @@ public class ChatActivity extends AppCompatActivity {
     View mActionBarView;
 
     LinearLayoutManager mLinearLayoutManager;
-
+    ListenerRegistration mListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,12 +110,29 @@ public class ChatActivity extends AppCompatActivity {
         if (mAdapter != null) {
             mAdapter.startListening();
         }
+        ViewedMessageHelper.updateOnline(true, ChatActivity.this);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, ChatActivity.this);
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mAdapter.stopListening();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mListener != null){
+            mListener.remove();
+        }
     }
 
     private void getMessageChat() {
@@ -209,17 +223,27 @@ public class ChatActivity extends AppCompatActivity {
         String idUserInfo = "";
         if (mAuthProvider.getUid().equals(mExtraIdUser1)) {
             idUserInfo = mExtraIdUser2;
-        }
-        else {
+        } else {
             idUserInfo = mExtraIdUser1;
         }
-        mUsersProvider.getUser(idUserInfo).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+
+        mListener = mUsersProvider.getUserRealtime(idUserInfo).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
                 if (documentSnapshot.exists()) {
                     if (documentSnapshot.contains("username")) {
                         String username = documentSnapshot.getString("username");
                         mTextViewUsername.setText(username);
+                    }
+                    if (documentSnapshot.contains("online")) {
+                        boolean online = documentSnapshot.getBoolean("online");
+                        if (online) {
+                            mTextViewRelativeTime.setText("En linea");
+                        } else if (documentSnapshot.contains("lastConnect")) {
+                            long lastConnect = documentSnapshot.getLong("lastConnect");
+                            String relativeTime = RelativeTime.getTimeAgo(lastConnect, ChatActivity.this);
+                            mTextViewRelativeTime.setText(relativeTime);
+                        }
                     }
                     if (documentSnapshot.contains("image_profile")) {
                         String imageProfile = documentSnapshot.getString("image_profile");

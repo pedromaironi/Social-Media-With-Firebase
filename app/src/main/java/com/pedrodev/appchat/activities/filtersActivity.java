@@ -19,6 +19,7 @@ import com.pedrodev.appchat.adapters.PostsAdapter;
 import com.pedrodev.appchat.models.Post;
 import com.pedrodev.appchat.providers.AuthProvider;
 import com.pedrodev.appchat.providers.postProvider;
+import com.pedrodev.appchat.utils.ViewedMessageHelper;
 
 public class filtersActivity extends AppCompatActivity {
 
@@ -55,6 +56,7 @@ public class filtersActivity extends AppCompatActivity {
         mPostProvider = new postProvider();
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
@@ -69,12 +71,22 @@ public class filtersActivity extends AppCompatActivity {
         mPostsAdapter = new PostsAdapter(options, filtersActivity.this, mTextViewNumberFilter);
         mRecyclerView.setAdapter(mPostsAdapter);
         mPostsAdapter.startListening();
+        ViewedMessageHelper.updateOnline(true, filtersActivity.this);
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mPostsAdapter.stopListening();
+        ViewedMessageHelper.updateOnline(false, filtersActivity.this);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, filtersActivity.this);
     }
 
     @Override

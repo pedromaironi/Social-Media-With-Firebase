@@ -3,6 +3,7 @@ package com.pedrodev.appchat.adapters;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.pedrodev.appchat.R;
@@ -42,6 +44,7 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.Vi
     UsersProvider mUsersProvider;
     LikesProvider mLikesProvider;
     TextView mTextViewNumberFilter;
+    ListenerRegistration listenerRegistration;
 
     AuthProvider mAuthProvider;
     public PostsAdapter(FirestoreRecyclerOptions<Post> options,Context context){
@@ -58,7 +61,7 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.Vi
         mUsersProvider = new UsersProvider();
         mLikesProvider = new LikesProvider();
         mAuthProvider = new AuthProvider();
- mTextViewNumberFilter = textView;
+        mTextViewNumberFilter = textView;
     }
 
     // Set data for each view
@@ -105,29 +108,31 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.Vi
             }
         });
 
-      getUserInfo(mAuthProvider.getUid(), holder);
+      getUserInfo(post.getIdUser(), holder);
       getNumberLikesByPost(postId, holder);
       checkIfExistsLike(postId,mAuthProvider.getUid(),holder);
     }
 
     private void getNumberLikesByPost(String idPost, final ViewHolder holder){
         // allows get info real time
-        mLikesProvider.getLikesByPost(idPost).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        listenerRegistration =  mLikesProvider.getLikesByPost(idPost).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @SuppressLint("SetTextI18n")
             @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                int numberLikes = value.size();
-                switch(numberLikes){
-                    case 0:
-                        holder.textViewLikes.setText("0 Me gustas");
-                        break;
-                    case 1:
-                        holder.textViewLikes.setText(String.valueOf(numberLikes) + " Me gusta");
-                        break;
-                    default:
-                        holder.textViewLikes.setText(String.valueOf(numberLikes) + " Me gustas");
-                        break;
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) {
+                if(queryDocumentSnapshots != null) {
+                    int numberLikes = queryDocumentSnapshots.size();
+                    switch (numberLikes) {
+                        case 0:
+                            holder.textViewLikes.setText("0 Me gustas");
+                            break;
+                        case 1:
+                            holder.textViewLikes.setText(numberLikes + " Me gusta");
+                            break;
+                        default:
+                            holder.textViewLikes.setText(numberLikes + " Me gustas");
+                            break;
+                    }
                 }
-
             }
         });
     }
@@ -178,6 +183,10 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.Vi
                 }
             }
         });
+    }
+
+    public ListenerRegistration getListener() {
+        return listenerRegistration;
     }
 
     @NonNull
