@@ -224,7 +224,7 @@ public class ChatActivity extends AppCompatActivity {
         if (mAuthProvider.getUid().equals(mExtraIdUser1)) {
             idUserInfo = mExtraIdUser2;
         } else {
-            
+
             idUserInfo = mExtraIdUser1;
         }
 
