@@ -21,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/searchBar"
-        app:mt_searchBarColor="@color/colorPrimary"
+        app:mt_searchBarColor="@color/primary_color"
         app:mt_textColor="@color/white_color"
         app:mt_placeholderColor="@color/white_color"
         app:mt_searchIconTint="@color/white_color"

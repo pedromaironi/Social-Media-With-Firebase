@@ -49,7 +49,6 @@ public class HomeActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         ViewedMessageHelper.updateOnline(true, HomeActivity.this);
-
     }
 
     @Override

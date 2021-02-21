@@ -35,6 +35,8 @@ import retrofit2.Callback;
 
 public class MessageReceiver extends BroadcastReceiver {
 
+    public static final String NOTIFICATION_REPLY = "NotificationReply";
+
     String mExtraIdSender;
     String mExtraIdReceiver;
     String mExtraIdChat;
@@ -65,9 +67,9 @@ public class MessageReceiver extends BroadcastReceiver {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(mExtraIdNotification);
 
-       // String message = getMessageText(intent).toString();
+        String message = getMessageText(intent).toString();
 
-        //sendMessage(message);
+        sendMessage(message);
     }
 
     private void sendMessage(String messageText) {
@@ -135,6 +137,14 @@ public class MessageReceiver extends BroadcastReceiver {
             }
         });
 
+    }
+
+    private CharSequence getMessageText(Intent intent) {
+        Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
+        if (remoteInput != null) {
+            return remoteInput.getCharSequence(NOTIFICATION_REPLY);
+        }
+        return null;
     }
 
 }

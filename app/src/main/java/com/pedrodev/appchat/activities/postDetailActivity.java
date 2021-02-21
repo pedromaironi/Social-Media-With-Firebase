@@ -1,7 +1,6 @@
 package com.pedrodev.appchat.activities;
 
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,7 +11,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +30,6 @@ import com.pedrodev.appchat.models.FCMResponse;
 import com.pedrodev.appchat.providers.LikesProvider;
 import com.pedrodev.appchat.providers.NotificationProvider;
 import com.pedrodev.appchat.providers.TokenProvider;
-import com.pedrodev.appchat.utils.RelativeTime;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,18 +39,15 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 import com.pedrodev.appchat.R;
 import com.pedrodev.appchat.adapters.CommentAdapter;
-import com.pedrodev.appchat.adapters.PostsAdapter;
 import com.pedrodev.appchat.adapters.SliderAdapter;
 import com.pedrodev.appchat.models.Comment;
-import com.pedrodev.appchat.models.Post;
 import com.pedrodev.appchat.models.SliderItem;
 import com.pedrodev.appchat.providers.AuthProvider;
 import com.pedrodev.appchat.providers.UsersProvider;
 import com.pedrodev.appchat.providers.commentProvider;
 import com.pedrodev.appchat.providers.postProvider;
-import com.pedrodev.appchat.utils.RelativeTime;
 import com.pedrodev.appchat.utils.ViewedMessageHelper;
-import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
+import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 import com.squareup.picasso.Picasso;
@@ -374,7 +368,7 @@ public class postDetailActivity extends AppCompatActivity {
     private void instanceSlider() {
         mSliderAdapter = new SliderAdapter(postDetailActivity.this, mSliderItems);
         mSliderView.setSliderAdapter(mSliderAdapter);
-        mSliderView.setIndicatorAnimation(IndicatorAnimationType.THIN_WORM);
+        mSliderView.setIndicatorAnimation(IndicatorAnimations.THIN_WORM);
         mSliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
         mSliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_RIGHT);
         mSliderView.setIndicatorSelectedColor(Color.WHITE);

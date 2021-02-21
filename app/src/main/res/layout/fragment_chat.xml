@@ -5,12 +5,18 @@
     android:layout_height="match_parent"
     tools:context=".fragments.ChatsFragment"
     android:layout_marginBottom="55dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     >
+
+
+    <include layout="@layout/action_bar_toolbar" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_marginTop="55dp"
         >
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/RecyclerViewChats"

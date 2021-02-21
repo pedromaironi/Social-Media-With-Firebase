@@ -199,6 +199,9 @@ public class MainActivity extends AppCompatActivity {
         String email = mTextInputEmail.getText().toString();
         String password = mTextInputPassword.getText().toString();
         mDialog.show();
+        if(!email.isEmpty()){
+            
+        }
         mAuthProvider.login(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
