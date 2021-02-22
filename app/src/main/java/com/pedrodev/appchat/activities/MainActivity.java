@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
         String password = mTextInputPassword.getText().toString();
         mDialog.show();
         if(!email.isEmpty()){
-            
+
         }
         mAuthProvider.login(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
