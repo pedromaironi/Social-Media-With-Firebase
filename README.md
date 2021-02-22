@@ -63,7 +63,9 @@ implementation 'com.google.firebase:firebase-auth:19.1.0'
 }
 apply plugin: 'com.google.gms.google-services'
 ```
-### Dependecies in build.gradle(AppChat
+### Dependecies in build.gradle(App)
+For this project, We are going to use Firebase, then we must add the necessary dependencies in the build.gradle (App) then I will explain what each one is for.
+
 ```
 
 buildscript {
@@ -97,223 +99,265 @@ task clean(type: Delete) {
 ```
 ## Adding Firebase as a Dependency
 - Firebase
-  - Firebase is a mobile platform created by Google, whose main function is to develop and facilitate the creation of high-quality apps quickly, in order to increase the user base and earn more money.
+  - Firebase is a mobile platform created by Google, whose main function is to develop and facilitate the creation of high-quality apps quickly, in order to increase the user base +and earn more money.
+  - You can see the docs of Authentication from google HERE!
+	- 🟠[Create Authentication with Firebase](https://github.com/pedromaironi/Social-Media-With-Firebase/blob/master/docs/FirebaseAuthentication.md)
+
+  - So, we are going to go to our MainActivity.xml file to instantiate the Google Login button
   
-### Create Authentication with Firebase
-:fire: Firebase Authentication provides backend services, easy-to-use SDKs, and ready made UI libraries to authenticate users to your app. Supports authentication using passwords, phone numbers, popular federated identity providers like google, facebook and twitter, and much more.
+  ### This is the template that we are going to use
+  🟠 [Layout Main Activity](https://github.com/pedromaironi/Social-Media-With-Firebase/blob/a7a5ce81cde64f1cbe8facc5b38d360bc8c914bc/app/src/main/res/layout/activity_main.xml#L1)
+  
+	<p align="left">
+	<img src="https://i.imgur.com/upEduTL.png" alt="Login" width="250" height="500" />
+	</p>
 
-### Implementation
+	```
+	// This is a Button from Google Docs.
+	 <com.google.android.gms.common.SignInButton
+        android:id="@+id/signInButtonGoogle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+        android:paddingBottom="50dp"/>
+	
+	```
 
-:fire: In the file called (build.graddle) we will have the code block called dependecies. Thus, we will have to instantiate the following implementations.
-```
-dependencies {
-	implementation platform('com.google.firebase:firebase-bom:26.4.0')
-	implementation 'com.google.firebase:firebase-auth'
-}
-```
-### Add Google play services
+	### For use this button,We will have to go to the mainActivity.java to instantiate the button.
+	```
+	// We would have to instantiate the button with its class out of the class
+	SignInButton mButtonGoogle;
+    	GoogleSignInClient mGoogleSignInClient;
+    	
+	GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+		
+	mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+	
+	mButtonGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signInGoogle();
+            }
+        });
+	
+	```
+	> _[To further expand the information about GoogleSignInOptions HERE](https://developers.google.com/android/reference/com/google/android/gms/auth/api/signin/GoogleSignInOptions.Builder)_
+	
+	So, Here we are instanciate our button from GoogleClient. For continous we are going to create a new function called signInGoogle on the OnClick for of button called 		mButtonGoogle
 
-:fire: In the build.gradletop level file of your project, make sure the Google Maven repository is included:
-```
-allprojects {
-    repositories {
-        google()
-
-        // If you're using a version of Gradle lower than 4.1, you must instead use:
-        // maven {
-        //     url 'https://maven.google.com'
-        // }
+	```
+	  private void signInGoogle() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE);
     }
-}
-```
-Then at your file build.gradlelevel build.gradle, declare Google Play services as a dependency:
 
-```
-apply plugin: 'com.android.application'
-    ...
-
-    dependencies {
-        implementation 'com.google.android.gms:play-services-auth:19.0.0'
-    }
-```
-
-Set up a Google API console project
-To set up a Google API Console project, click the button below and specify the package name of your application when prompted. You will also need to provide the SHA-1 hash of your signing certificate. See Authentication of your client for more information.
-
-### Get the OAuth 2.0 client ID from your backend server
-If your application authenticates with a backend server or accesses Google APIs from your backend server , you must obtain the OAuth 2.0 client ID that was created for your server. To find the OAuth 2.0 client ID: UID
-
-1. Open the [Credentials page](https://console.developers.google.com/apis/credentials)
-
-    in the API Console.
-
-2. The client ID of the **web application**
-
-type is the OAuth 2.0 client ID of your backend server.
-
-If you are using Google Login with an app or site that communicates with a backend server, you may need to identify the user who is currently logged into the server. To do this securely, after a user successfully logs in, send the user identification token to your server using HTTPS. Then, on the server, verify the integrity of the ID token and use the user information contained in the token to establish a session or create a new account.
-
-Pass this client ID to the method requestIdTokenor requestServerAuthCodewhen you create the object GoogleSignInOptions.
-
-## Next steps
-
-Now that you've set up a Google API Console project and set up your Android Studio project, you can [integrate Google Login](https://developers.google.com/identity/sign-in/android/sign-in) into your app.
-
-# Integration of Google login in your Android application
-
-To integrate Google Sign-In into your Android app, set up Google Sign-In and add a button to your app layout that starts the sign-in flow.
-
-## Before you start
-
-[Set up a Google API Console project and set up your Android Studio project](https://developers.google.com/identity/sign-in/android/start-integrating) .
-
-## Configure Google Login and GoogleSignInClient Object
-
-1. In the method **`onCreate`**of their activity **`onCreate`**to **`onCreate`**, configure the **`onCreate`**session Google to request user data required by your application. For example, to configure Google login to request user IDs and basic profile information, create an object **`[GoogleSignInOptions](https://developers.google.com/android/reference/com/google/android/gms/auth/api/signin/GoogleSignInOptions.Builder#GoogleSignInOptions.Builder())`**with the parameter **`DEFAULT_SIGN_IN`**. To also request the email addresses of the users, create the object **`GoogleSignInOptions`**with the option **`requestEmail`**.
-
-
-```java
-    // Configure sign-in to request the user's ID, email address, and basic
-    // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-    .requestEmail()
-    .build();
-```
-
-2. Then, also in the method onCreateof its activity onCreateto onCreatecreate an object GoogleSignInClient with the options you specified.
-
-```java
-// Build a GoogleSignInClient with the options specified by gso.
-mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-```
-
-## Check if there is a user who is logged in
-
-In the method **`onStart`**your activity, check if a user has already **`onStart`**in your application with Google.
-
-`// Check for existing Google Sign In account, if the user is already signed in// the GoogleSignInAccount will be non-null.GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);updateUI(account);`
-
-If you **`GoogleSignIn.getLastSignedInAccount`**return an object **`GoogleSignInAccount`**(instead of **`null`**), the user has already **`GoogleSignIn.getLastSignedInAccount`** **`GoogleSignInAccount`**in your application with Google. Update your UI accordingly, that is, hide the login button, start your main activity, or whatever is appropriate for your application.
-
-If it **`GoogleSignIn.getLastSignedInAccount`**returns **`null`**, the user has not yet **`GoogleSignIn.getLastSignedInAccount`**in their application with Google. Update your UI to show the Google login button.
-
-## Add the Google login button to your app
-
-1. **`[SignInButton](https://developers.google.com/android/reference/com/google/android/gms/common/SignInButton)`**
-
-    ![https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png](https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png)
-
-    Add
-
-    in your application layout:
-
-    `<com.google.android.gms.common.SignInButton android:id="@+id/sign_in_button" android:layout_width="wrap_content" android:layout_height="wrap_content" />`
-
-2. **Optional** : If you are using the default login button graphic instead of providing your own login button assets, you can customize the size of the button with the method **`[setSize](https://developers.google.com/android/reference/com/google/android/gms/common/SignInButton#setSize(int))`**.
-
-    `// Set the dimensions of the sign-in button.SignInButton signInButton = findViewById(R.id.sign_in_button);signInButton.setSize(SignInButton.SIZE_STANDARD);`
-
-3. In Android activity (for example, in method **`onCreate`**), register **`OnClickListener`**your button for **`OnClickListener`**session as user when you **`OnClickListener`**click on it:
-
-    `findViewById(R.id.sign_in_button).setOnClickListener(this);`
-
-## Start the login flow
-
-1. **`onClick[getSignInIntentgetSignInIntent](https://developers.google.com/android/reference/com/google/android/gms/auth/api/signin/GoogleSignInClient#getSignInIntent())startActivityForResult`**
-
-    ![https://developers.google.com/identity/sign-in/android/images/choose-account.png](https://developers.google.com/identity/sign-in/android/images/choose-account.png)
-
-    In
-
-    the activity method , handle the
-
-    login buttons by creating a login intent with the method
-
-    and starting the intent with
-
-    ```
     @Override
-    public void onClick(View v) {    
-      switch (v.getId()) 
-      {        
-      case R.id.sign_in_button:            
-        signIn();            
-      break;        
-      // ...    
-      }}
-    ```
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-    ```
-    private void signIn() {    
-    Intent signInIntent = mGoogleSignInClient.getSignInIntent();    
-    startActivityForResult(signInIntent, RC_SIGN_IN);}
-    ```
-
-    ### Instanciate the listener for signInWithGoogle() method
-
-    ```java
-    mButtonLoginGoogle.setOnClickListener(new View.OnClickListener(){
-        @Override
-        public void onClick(View view){
-            signInWithGoogle();
-        }
-    });
-
-    private void signInWithGoogle() {
-            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-            startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE);
-        }
-    ```
-
-    **REMEMBER create the varible for the Code Request. In this case REQUEST_CODE_GOOGLE = 1012;** This code will be used in the onStartActivityResult to confirm that the requestCode is the same.
-
-    Once the user GoogleSignInAccount, you can get a GoogleSignInAccount object for the user in the activity's onActivityResult method.
-
-    ```java
-    @Override
-        public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, data);
-            // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-            if (requestCode == REQUEST_CODE_GOOGLE) {
-                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-                try {
-                    // Google Sign In was successful, authenticate with Firebase
-                    //Log.d("ERROR", "firebaseAuthWithGoogle:" + account.getId());
-                    GoogleSignInAccount account = task.getResult(ApiException.class);
-                    firebaseAuthWithGoogle(account);
-                } catch (ApiException e) {
-                    // Google Sign In failed, update UI appropriately
-                    Log.w("ERROR", "Google sign in failed", e);
-                    // ...
-                }
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == REQUEST_CODE_GOOGLE) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                firebaseAuthWithGoogle(account);
+            } catch (ApiException e) {
+                // Google Sign In failed, update UI appropriately
+                Log.w("ERROR", "Google sign in failed", e);
+                // ...
             }
         }
-    ```
-
-    The GoogleSignInAccount object contains information about the user that GoogleSignInAccount, such as the user's name.
-
-    ```
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
-            // Signed in successfully, show authenticated UI.
-            updateUI(account);
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            updateUI(null);
-        }
     }
-    ```
+
+	/*
+	RequestCode - The integer request code originally provided to startActivityForResult (), allowing you to identify who this result is coming from.
+	ResultCode: the integer result code returned by the child activity through its setResult ().
+	Data: an Intent, which can return result data to the caller (various data can be attached to Intent 'extras').
+	*/
+	```
+	
+	Here we have a variable called REQUEST_CODE_GOOGLE, wich is the variable that will be returned to the onActivityForResult for confirm the requestCode from any startActivityForResult that is activated when the activity ends. So, when this task:
+	
+	```
+	Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+	```
+	This asynchronous task of type <GoogleSignInAccount> returns the information of the user who is logged in.
+	If this task completes successfully then the function will be called
+	
+	```
+	firebaseAuthWithGoogle(account);
+	
+	private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        mDialog.show();
+        mAuthProvider.googleLogin(acct).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    String id = mAuthProvider.getUid();
+                    checkUserExist(id);
+                }
+                else {
+                    mDialog.dismiss();
+                    // If sign in fails, display a message to the user.
+                    Log.w("ERROR", "signInWithCredential:failure", task.getException());
+                    Toast.makeText(MainActivity.this, "No se pudo iniciar sesion con google", Toast.LENGTH_SHORT).show();
+                }
+                // ...
+            }
+        });
+    }
+	```
+	As you can see in this method I am passing the GoogleSignInAccount object to start session with google.
+
+	So here we see that I have an object called mAuthProvider. Therefore, we must create a folder called providers and create a class within this folder called AuthProvider
+	Inside this class we are going to instantiate Firebase in this way
+	```
+	private FirebaseAuth mAuth;
+
+    public AuthProvider() {
+        mAuth = FirebaseAuth.getInstance();
+    }
+	```
+	
+	```
+	    public Task<AuthResult> googleLogin(GoogleSignInAccount googleSignInAccount) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(), null);
+        return mAuth.signInWithCredential(credential);
+    }
+	```
+	
+	This function is of type <AuthResult> called googleLogin and we are going to pass the object GoogleSignInAccount
+	Inside this method we will have to create a variable of type AuthCredential to obtain the user's credentials, and then return them to the Main Activity
+	```
+	return mAuth.signInWithCredential(credential);
+	```
+	
+	So, we see that we have to instantiate this class as follows:
+	
+	```
+	//Outside of onCreate
+	AuthProvider mAuthProvider;
+	//Inside of onCreate
+	mAuthProvider = new AuthProvider();
+	```
+	So, now we have the object for to use in the function _firebaseAuthWithGoogle_.
+	
+	```
+	mAuthProvider.googleLogin(acct).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {}
+	```
+	The addOnCompleteListener is a listener called when a Task completes.
+	With the onComplete method we are going to confirm that the task finished correctly, then we are going to have to create another method to confirm if the user exists so as not to have to create it again.
+	
+	```
+	private void checkUserExist(final String id) {
+        mUsersProvider.getUser(id).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    mDialog.dismiss();
+                    Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    String email = mAuthProvider.getEmail();
+                    User user = new User();
+                    user.setEmail(email);
+                    user.setId(id);
+                    mUsersProvider.create(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            mDialog.dismiss();
+                            if (task.isSuccessful()) {
+                                Intent intent = new Intent(MainActivity.this, CompleteProfileActivity.class);
+                                startActivity(intent);
+                            }
+                            else {
+                                Toast.makeText(MainActivity.this, "No se pudo almacenar la informacion del usuario", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+	```
+	
+	First, we are going to create a folder called Models to create a class called User with see follows atributes:
+	```
+	private String id;
+    	private String email;
+    	private String username;
+    	private String phone;
+    	private String imageProfile;
+    	private String imageCover;
+    	private long timestamp;
+    	private long lastConnection;
+    	private boolean online;
+	
+    public User() {
+
+    }
+	```
+	
+	Then, Pressing alt + insert we can have a direct access to create a constructor and the getters and setters that we are going to need
+	
+	Again we are going to create a class inside the folder called Providers with the name UsersProviders
+	So, the following is to create the method create and install the CollectionReference to be able to use FireStore and create a collection of data with that user
+	```
+	private CollectionReference mCollection;
+	  public UsersProvider() {
+        mCollection = FirebaseFirestore.getInstance().collection("Users");
+    }
     
-## Adding Firebase Authentication to the project
+	 public Task<Void> create(User user) {
+        return mCollection.document(user.getId()).set(user);
+    }
+	```
+	
+	Then we will go to the MainActivity class to instantiate this class.
+	```
+	// This is the same process of the instantiation of the previous provider
+	UsersProvider mUsersProvider;
+	mUsersProvider = new UsersProvider();
+	```
+	
+	So after this we see that to confirm that the user exists or not, we have a listener that confirms if the document exists.
 
-## Basic Usage
+	If the document exists then it is sent to the HomeActivity
 
-## License
-
-## Creadits
-
-## Thanks
+	If it does not exist, then it is created and sent to the CompleteProfileActivity to complete the record with all your data.
+	
+	```
+	public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    mDialog.dismiss();
+                    Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    String email = mAuthProvider.getEmail();
+                    User user = new User();
+                    user.setEmail(email);
+                    user.setId(id);
+                    mUsersProvider.create(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            mDialog.dismiss();
+                            if (task.isSuccessful()) {
+                                Intent intent = new Intent(MainActivity.this, CompleteProfileActivity.class);
+                                startActivity(intent);
+                            }
+                            else {
+                                Toast.makeText(MainActivity.this, "No se pudo almacenar la informacion del usuario", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            }
+	```
