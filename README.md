@@ -22,14 +22,16 @@
 </p>
 
 ## Overview
-Social media consists of the publication of photos or articles to be presented in the application's feed in order that its users can interact with each other with likes, comments or chats in real time, this application implements several plugins. However, everything is related to Firebase.
+Social media consists of the publication of photos or articles to be presented in the applications feed in order that its users can interact with each other with likes, comments or chats in real time, this application implements several plugins. However, everything is related to Firebase.
 
 ## Table of Contents
 
 - [Getting Started](#getting-started)
-  - [Adding Firebase as a Dependency](#adding-firebase-as-a-dependency)
-  - [Adding Firebase Authentication to the project](#adding-firebase-to-the-proyect)
-  - [Basic Usage](#basic-usage)
+  - [Create Firebase Authentication to the project](#create-firebase-authentication-to-the-project)
+  	- [Create Provider of authentication](#create-provider-of-authentication)
+  	- [Create Provider of users](#create-provider-of-authentication)
+  	- [Create Model of user](#create-model-of-user)
+  - [Create a login with GoogleSignIn into the project](#create-a-login-with-googlesignIn-into-the-project)
 - [Best Practices](#best-practices)
 - [Features at a Social Media](#features-at-a-social-media)
   - [License](#license)
@@ -37,7 +39,7 @@ Social media consists of the publication of photos or articles to be presented i
   - [Thanks](#thanks)
 
 ## Getting Started
-If you want to start working to create a similar application or add features similar to that of this social network to your project, you should include the following dependencies in your project.These are all the dependencies used in this one, but if you only want to understand how a specific one works, check the index of the document. 
+If you want to start working to create a similar application or add features similar to that of this social network to your project, you should include the following dependencies in your project.These are all the dependencies used in this one, but if you only want to understand how a specific one works, check the index of the document.
 
 ### Adding dependencies to your project in the build.gradle(Module App)
 ```
@@ -97,7 +99,7 @@ task clean(type: Delete) {
 }
 
 ```
-## Adding Firebase as a Dependency
+## Create Firebase Authentication to the project
 - Firebase
   - Firebase is a mobile platform created by Google, whose main function is to develop and facilitate the creation of high-quality apps quickly, in order to increase the user base +and earn more money.
   - You can see the docs of Authentication from google HERE!
@@ -105,7 +107,8 @@ task clean(type: Delete) {
 
   - So, we are going to go to our MainActivity.xml file to instantiate the Google Login button
   
-  ### This is the template that we are going to use
+## Create a login with GoogleSignIn into the project
+
   🟠 [Layout Main Activity](https://github.com/pedromaironi/Social-Media-With-Firebase/blob/a7a5ce81cde64f1cbe8facc5b38d360bc8c914bc/app/src/main/res/layout/activity_main.xml#L1)
   
 	<p align="left">
@@ -125,8 +128,10 @@ task clean(type: Delete) {
 	
 	```
 
-	### For use this button,We will have to go to the mainActivity.java to instantiate the button.
-	```
+### For use this button,We will have to go to the mainActivity.java to instantiate the button.
+
+
+```
 	// We would have to instantiate the button with its class out of the class
 	SignInButton mButtonGoogle;
     	GoogleSignInClient mGoogleSignInClient;
@@ -143,14 +148,14 @@ task clean(type: Delete) {
             public void onClick(View view) {
                 signInGoogle();
             }
-        });
-	
+        });	
 	```
-	> _[To further expand the information about GoogleSignInOptions HERE](https://developers.google.com/android/reference/com/google/android/gms/auth/api/signin/GoogleSignInOptions.Builder)_
-	
-	So, Here we are instanciate our button from GoogleClient. For continous we are going to create a new function called signInGoogle on the OnClick for of button called 		mButtonGoogle
 
-	```
+> _[To further expand the information about GoogleSignInOptions HERE](https://developers.google.com/android/reference/com/google/android/gms/auth/api/signin/GoogleSignInOptions.Builder)_
+
+So, Here we are instanciate our button from GoogleClient. For continous we are going to create a new function called signInGoogle on the OnClick for of button called 		mButtonGoogle
+
+```
 	  private void signInGoogle() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE);
@@ -180,17 +185,18 @@ task clean(type: Delete) {
 	ResultCode: the integer result code returned by the child activity through its setResult ().
 	Data: an Intent, which can return result data to the caller (various data can be attached to Intent 'extras').
 	*/
-	```
-	
-	Here we have a variable called REQUEST_CODE_GOOGLE, wich is the variable that will be returned to the onActivityForResult for confirm the requestCode from any startActivityForResult that is activated when the activity ends. So, when this task:
-	
-	```
+```
+
+Here we have a variable called REQUEST_CODE_GOOGLE, wich is the variable that will be returned to the onActivityForResult for confirm the requestCode from any startActivityForResult that is activated when the activity ends. So, when this task:
+
+
+```
 	Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-	```
-	This asynchronous task of type <GoogleSignInAccount> returns the information of the user who is logged in.
-	If this task completes successfully then the function will be called
-	
-	```
+```
+This asynchronous task of type <GoogleSignInAccount> returns the information of the user who is logged in. f this task completes successfully then the function will be called
+
+
+```
 	firebaseAuthWithGoogle(account);
 	
 	private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
@@ -212,11 +218,13 @@ task clean(type: Delete) {
             }
         });
     }
-	```
-	As you can see in this method I am passing the GoogleSignInAccount object to start session with google.
+```
+## Create Provider of authentication
+- As you can see in this method I am passing the GoogleSignInAccount object to start session with google.
 
-	So here we see that I have an object called mAuthProvider. Therefore, we must create a folder called providers and create a class within this folder called AuthProvider
-	Inside this class we are going to instantiate Firebase in this way
+- So here we see that I have an object called mAuthProvider. Therefore, we must create a folder called providers and create a class within this folder called AuthProvider
+Inside this class we are going to instantiate Firebase in this way
+
 	```
 	private FirebaseAuth mAuth;
 
@@ -231,30 +239,32 @@ task clean(type: Delete) {
         return mAuth.signInWithCredential(credential);
     }
 	```
-	
-	This function is of type <AuthResult> called googleLogin and we are going to pass the object GoogleSignInAccount
-	Inside this method we will have to create a variable of type AuthCredential to obtain the user's credentials, and then return them to the Main Activity
-	```
+
+- This function is of type <AuthResult> called googleLogin and we are going to pass the object GoogleSignInAccount
+Inside this method we will have to create a variable of type AuthCredential to obtain the user's credentials, and then return them to the Main Activity
+
+```
 	return mAuth.signInWithCredential(credential);
 	```
-	
-	So, we see that we have to instantiate this class as follows:
-	
-	```
+## Create Provider of users
+- We see that we have to instantiate this class as follows:
+
+
+```
 	//Outside of onCreate
 	AuthProvider mAuthProvider;
 	//Inside of onCreate
 	mAuthProvider = new AuthProvider();
-	```
-	So, now we have the object for to use in the function _firebaseAuthWithGoogle_.
-	
-	```
+```
+- Now we have the object for to use in the function _firebaseAuthWithGoogle_.
+
+```
 	mAuthProvider.googleLogin(acct).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {}
-	```
-	The addOnCompleteListener is a listener called when a Task completes.
-	With the onComplete method we are going to confirm that the task finished correctly, then we are going to have to create another method to confirm if the user exists so as not to have to create it again.
-	
-	```
+```
+- The addOnCompleteListener is a listener called when a Task completes.
+With the onComplete method we are going to confirm that the task finished correctly, then we are going to have to create another method to confirm if the user exists so as not to have to create it again.
+
+```
 	private void checkUserExist(final String id) {
         mUsersProvider.getUser(id).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -286,10 +296,11 @@ task clean(type: Delete) {
             }
         });
     }
-	```
+```
+
+- First, we are going to create a folder called Models to create a class called User with see follows atributes:
 	
-	First, we are going to create a folder called Models to create a class called User with see follows atributes:
-	```
+```
 	private String id;
     	private String email;
     	private String username;
@@ -299,41 +310,43 @@ task clean(type: Delete) {
     	private long timestamp;
     	private long lastConnection;
     	private boolean online;
-	
+
     public User() {
 
     }
-	```
-	
-	Then, Pressing alt + insert we can have a direct access to create a constructor and the getters and setters that we are going to need
-	
-	Again we are going to create a class inside the folder called Providers with the name UsersProviders
+```
+
+- Then, Pressing alt + insert we can have a direct access to create a constructor and the getters and setters that we are going to need
+
+- Again we are going to create a class inside the folder called Providers with the name UsersProviders
 	So, the following is to create the method create and install the CollectionReference to be able to use FireStore and create a collection of data with that user
-	```
+
+```
 	private CollectionReference mCollection;
 	  public UsersProvider() {
         mCollection = FirebaseFirestore.getInstance().collection("Users");
     }
-    
-	 public Task<Void> create(User user) {
+
+	public Task<Void> create(User user) {
         return mCollection.document(user.getId()).set(user);
     }
-	```
-	
-	Then we will go to the MainActivity class to instantiate this class.
-	```
+```
+- Then we will go to the MainActivity class to instantiate this class.
+
+```
 	// This is the same process of the instantiation of the previous provider
 	UsersProvider mUsersProvider;
 	mUsersProvider = new UsersProvider();
-	```
-	
-	So after this we see that to confirm that the user exists or not, we have a listener that confirms if the document exists.
 
-	If the document exists then it is sent to the HomeActivity
+```
 
-	If it does not exist, then it is created and sent to the CompleteProfileActivity to complete the record with all your data.
-	
-	```
+- So after this we see that to confirm that the user exists or not, we have a listener that confirms if the document exists.
+
+- If the document exists then it is sent to the HomeActivity
+
+- If it does not exist, then it is created and sent to the CompleteProfileActivity to complete the record with all your data.
+
+```
 	public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
                     mDialog.dismiss();
@@ -361,3 +374,17 @@ task clean(type: Delete) {
                 }
             }
 	```
+	
+## Features at a Social Media
+
+- Feed
+- Posts
+- Notifications
+- Profile of user
+- Comments
+- Likes
+- Messages
+- Authentication with Firebase in Google Login
+- Realtime Database
+- Cloud Firestore
+- Storage
