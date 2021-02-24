@@ -99,9 +99,10 @@ task clean(type: Delete) {
 }
 
 ```
+
 ## Create Firebase Authentication to the project
 - Firebase
-  - Firebase is a mobile platform created by Google, whose main function is to develop and facilitate the creation of high-quality apps quickly, in order to increase the user base +and earn more money.
+  - Firebase is a mobile platform created by Google, whose main function is to develop and facilitate the creation of high-quality apps quickly, in order to increase the user base and earn more money.
   - You can see the docs of Authentication from google HERE!
 	- 🟠[Create Authentication with Firebase](https://github.com/pedromaironi/Social-Media-With-Firebase/blob/master/docs/FirebaseAuthentication.md)
 
@@ -111,13 +112,13 @@ task clean(type: Delete) {
 
   🟠 [Layout Main Activity](https://github.com/pedromaironi/Social-Media-With-Firebase/blob/a7a5ce81cde64f1cbe8facc5b38d360bc8c914bc/app/src/main/res/layout/activity_main.xml#L1)
   
-	<p align="left">
+<p align="left">
 	<img src="https://i.imgur.com/upEduTL.png" alt="Login" width="250" height="500" />
-	</p>
+</p>
 	
 ```
 	// This is a Button from Google Docs.
-	 <com.google.android.gms.common.SignInButton
+	<com.google.android.gms.common.SignInButton
         android:id="@+id/signInButtonGoogle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -151,12 +152,18 @@ task clean(type: Delete) {
         });	
 ```
 
+- RequestIdToken(R.string.defaul_web_client_id: Specifies that an ID token for authenticated users is requested. Requesting an ID token requires that the server client ID be specified.
+- RequestEmail(): Specifies that email info is requested by your application. Note that we don't recommend keying user by email address since email address might change. Keying user by ID is the preferable approach.
+- Build(): Default Builder for **`[GoogleSignInOptions](https://developers.google.com/android/reference/com/google/android/gms/auth/api/signin/GoogleSignInOptions)`** which starts with clean configuration.
+
+If you are trying to implement Sign In, i.e. you want to get back user identity, you can start with **`new GoogleSignInOptions(GoogleSignInOptions.DEFAULT_SIGN_IN)`**
+
 >	[To further expand the information about GoogleSignInOptions HERE](https://developers.google.com/android/reference/com/google/android/gms/auth/api/signin/GoogleSignInOptions.Builder)_
 
-So, Here we are instanciate our button from GoogleClient. For continous we are going to create a new function called signInGoogle on the OnClick for of button called 		mButtonGoogle
+- Here we are instanciate our button from GoogleClient. For continous we are going to create a new function called signInGoogle on the OnClick for of button called mButtonGoogle
 
 ```
-	  private void signInGoogle() {
+     private void signInGoogle() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE);
     }
@@ -179,13 +186,13 @@ So, Here we are instanciate our button from GoogleClient. For continous we are g
             }
         }
     }
-
-	/*
-	RequestCode - The integer request code originally provided to startActivityForResult (), allowing you to identify who this result is coming from.
-	ResultCode: the integer result code returned by the child activity through its setResult ().
-	Data: an Intent, which can return result data to the caller (various data can be attached to Intent 'extras').
-	*/
+    
 ```
+- PARAMETERS
+
+RequestCode: The integer request code originally provided to startActivityForResult (), allowing you to identify who this result is coming from.
+ResultCode: the integer result code returned by the child activity through its setResult ().
+Data: an Intent, which can return result data to the caller (various data can be attached to Intent 'extras').
 
 Here we have a variable called REQUEST_CODE_GOOGLE, wich is the variable that will be returned to the onActivityForResult for confirm the requestCode from any startActivityForResult that is activated when the activity ends. So, when this task:
 
@@ -193,8 +200,8 @@ Here we have a variable called REQUEST_CODE_GOOGLE, wich is the variable that wi
 ```
 	Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
 ```
-This asynchronous task of type <GoogleSignInAccount> returns the information of the user who is logged in. f this task completes successfully then the function will be called
 
+- This asynchronous task of type <GoogleSignInAccount> returns the information of the user who is logged in. f this task completes successfully then the function will be called
 
 ```
 	firebaseAuthWithGoogle(account);
@@ -218,6 +225,7 @@ This asynchronous task of type <GoogleSignInAccount> returns the information of 
             }
         });
     }
+    
 ```
 ## Create Provider of authentication
 - As you can see in this method I am passing the GoogleSignInAccount object to start session with google.
@@ -225,27 +233,28 @@ This asynchronous task of type <GoogleSignInAccount> returns the information of 
 - So here we see that I have an object called mAuthProvider. Therefore, we must create a folder called providers and create a class within this folder called AuthProvider
 Inside this class we are going to instantiate Firebase in this way
 
-	```
-	private FirebaseAuth mAuth;
+```
+    private FirebaseAuth mAuth;
 
     public AuthProvider() {
         mAuth = FirebaseAuth.getInstance();
     }
-	```
+```
 	
-	```
-	    public Task<AuthResult> googleLogin(GoogleSignInAccount googleSignInAccount) {
+```
+	public Task<AuthResult> googleLogin(GoogleSignInAccount googleSignInAccount) {
         AuthCredential credential = GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(), null);
         return mAuth.signInWithCredential(credential);
     }
-	```
+```
 
-- This function is of type <AuthResult> called googleLogin and we are going to pass the object GoogleSignInAccount
-Inside this method we will have to create a variable of type AuthCredential to obtain the user's credentials, and then return them to the Main Activity
+- This function is of type <AuthResult> called googleLogin and we are going to pass the object GoogleSignInAccount. 
+- Inside this method we will have to create a variable of type AuthCredential to obtain the user's credentials, and then return them to the Main Activity
 
 ```
-	return mAuth.signInWithCredential(credential);
-	```
+	return mAuth.signInWithCredential(credential);	
+```
+
 ## Create Provider of users
 - We see that we have to instantiate this class as follows:
 
@@ -256,11 +265,13 @@ Inside this method we will have to create a variable of type AuthCredential to o
 	//Inside of onCreate
 	mAuthProvider = new AuthProvider();
 ```
+
 - Now we have the object for to use in the function _firebaseAuthWithGoogle_.
 
 ```
 	mAuthProvider.googleLogin(acct).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {}
 ```
+
 - The addOnCompleteListener is a listener called when a Task completes.
 With the onComplete method we are going to confirm that the task finished correctly, then we are going to have to create another method to confirm if the user exists so as not to have to create it again.
 
@@ -316,10 +327,9 @@ With the onComplete method we are going to confirm that the task finished correc
     }
 ```
 
-- Then, Pressing alt + insert we can have a direct access to create a constructor and the getters and setters that we are going to need
-
-- Again we are going to create a class inside the folder called Providers with the name UsersProviders
-	So, the following is to create the method create and install the CollectionReference to be able to use FireStore and create a collection of data with that user
+- Then, Pressing alt + insert we can have a direct access to create a constructor and the getters and setters that we are going to need.
+- Again we are going to create a class inside the folder called Providers with the name UsersProviders.
+- The following is to create the method create and install the CollectionReference to be able to use FireStore and create a collection of data with that user.
 
 ```
 	private CollectionReference mCollection;
@@ -331,6 +341,7 @@ With the onComplete method we are going to confirm that the task finished correc
         return mCollection.document(user.getId()).set(user);
     }
 ```
+
 - Then we will go to the MainActivity class to instantiate this class.
 
 ```
@@ -341,9 +352,7 @@ With the onComplete method we are going to confirm that the task finished correc
 ```
 
 - So after this we see that to confirm that the user exists or not, we have a listener that confirms if the document exists.
-
 - If the document exists then it is sent to the HomeActivity
-
 - If it does not exist, then it is created and sent to the CompleteProfileActivity to complete the record with all your data.
 
 ```
@@ -373,7 +382,7 @@ With the onComplete method we are going to confirm that the task finished correc
                     });
                 }
             }
-	```
+```
 	
 ## Features at a Social Media
 
