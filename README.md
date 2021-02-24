@@ -114,8 +114,8 @@ task clean(type: Delete) {
 	<p align="left">
 	<img src="https://i.imgur.com/upEduTL.png" alt="Login" width="250" height="500" />
 	</p>
-
-	```
+	
+```
 	// This is a Button from Google Docs.
 	 <com.google.android.gms.common.SignInButton
         android:id="@+id/signInButtonGoogle"
@@ -126,7 +126,7 @@ task clean(type: Delete) {
         android:layout_marginLeft="25dp"
         android:paddingBottom="50dp"/>
 	
-	```
+```
 
 ### For use this button,We will have to go to the mainActivity.java to instantiate the button.
 
@@ -149,9 +149,9 @@ task clean(type: Delete) {
                 signInGoogle();
             }
         });	
-	```
+```
 
-> _[To further expand the information about GoogleSignInOptions HERE](https://developers.google.com/android/reference/com/google/android/gms/auth/api/signin/GoogleSignInOptions.Builder)_
+>	[To further expand the information about GoogleSignInOptions HERE](https://developers.google.com/android/reference/com/google/android/gms/auth/api/signin/GoogleSignInOptions.Builder)_
 
 So, Here we are instanciate our button from GoogleClient. For continous we are going to create a new function called signInGoogle on the OnClick for of button called 		mButtonGoogle
 
